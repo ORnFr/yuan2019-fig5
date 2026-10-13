@@ -1,0 +1,28 @@
+# Local environment and Python caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+
+# Temporary work and macOS files
+work/
+*.log
+.DS_Store
+
+# Credentials and outside literature
+.env
+.env.*
+*.pem
+*.key
+bookandpaper/
+**/bookandpaper/
+*.pdf
+
+# Keep final reproducibility data and Figure 5 PNG tracked.
