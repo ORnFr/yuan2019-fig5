@@ -3,37 +3,18 @@
 import io
 import hashlib
 import json
-import os
 from pathlib import Path
 import platform
 import subprocess
 import sys
 from datetime import datetime, timedelta, timezone
 from importlib import metadata
-from unittest.mock import patch
 
 PROJECT = Path(__file__).resolve().parents[1]
-WORK = PROJECT / "work"
-if Path(sys.prefix).resolve() != PROJECT / ".venv":
-    raise RuntimeError("Run this script with this project's .venv/bin/python.")
+sys.path.insert(0, str(PROJECT / "src"))
+from yuan2019_fig5.runtime import configure_project, import_project_qutip
 
-# Set process-local paths and precision before scientific imports or arrays.
-for name, path in {
-    "TMPDIR": WORK / "tmp",
-    "XDG_CACHE_HOME": WORK / "cache",
-    "MPLCONFIGDIR": WORK / "matplotlib",
-    "JAX_COMPILATION_CACHE_DIR": WORK / "cache" / "jax",
-    "PYTHONPYCACHEPREFIX": WORK / "cache" / "pycache",
-    "PIP_CACHE_DIR": WORK / "cache" / "pip",
-}.items():
-    path.mkdir(parents=True, exist_ok=True)
-    os.environ[name] = str(path)
-sys.pycache_prefix = os.environ["PYTHONPYCACHEPREFIX"]
-os.environ["JAX_PLATFORMS"] = "cpu"
-os.environ["JAX_ENABLE_X64"] = "True"
-os.environ["MPLBACKEND"] = "Agg"
-os.environ["PIP_CONFIG_FILE"] = os.devnull
-os.environ["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
+configure_project()
 
 import jax
 
@@ -48,30 +29,6 @@ import tensorcircuit as tc
 
 tc.set_backend("jax")
 tc.set_dtype("complex128")
-
-
-def import_project_qutip():
-    """Import QuTiP with its import-time cache confined to this project.
-
-    QuTiP 5.2.3 constructs ~/.qutip before exposing its path settings.
-    Temporarily redirect only expanduser('~') during that import; restore
-    the standard function immediately afterward. No HOME or library file
-    is modified, and no physical/numerical behavior is patched.
-    """
-    original_expanduser = os.path.expanduser
-    cache_home = WORK / "cache" / "qutip-home"
-    cache_home.mkdir(parents=True, exist_ok=True)
-    with patch(
-        "os.path.expanduser",
-        side_effect=lambda path: str(cache_home) if path == "~" else original_expanduser(path),
-    ):
-        import qutip
-    if os.path.expanduser is not original_expanduser:
-        raise RuntimeError("The temporary path redirect was not restored.")
-    for path in (qutip.settings.tmproot, qutip.settings.coeffroot):
-        if not Path(path).resolve().is_relative_to(WORK):
-            raise RuntimeError("QuTiP was imported before project cache configuration.")
-    return qutip
 
 
 qutip = import_project_qutip()

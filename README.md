@@ -1,6 +1,6 @@
 # Yuan et al. (2019) Figure 5 reproduction
 
-Phase 1 (environment configuration and verification) is complete and awaiting user acceptance. No Exact, purification, McLachlan or VQS evolution modules have been implemented.
+Phase 2 (Exact evolution) is complete and awaiting user review. The latest user request authorized the Exact curve after Phase 1. No purification, McLachlan or VQS evolution modules have been implemented.
 
 Target: mixed-state variational quantum simulation of the two-qubit Lindblad model in Figure 5 of [Yuan et al. (2019)](https://quantum-journal.org/papers/q-2019-10-07-191/).
 
@@ -13,7 +13,31 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 1 uses the local branch `phase1/environment`, based on planning commit `07ea9d7`. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 2 uses local branch `phase2/exact`, based on Phase 1 commit `d9d208d`; the planning and environment branches are preserved. No push or merge has been performed.
+
+## Exact evolution: run and outputs
+
+The model is the paper's Eq. (62): `H = X tensor I + I tensor X + 0.25 Z tensor Z`, two unit-rate collapse operators `|0><1| tensor I` and `I tensor |0><1|`, initial density `|00><00|`, observable `Z tensor I`. Basis order is `|00>, |01>, |10>, |11>`; hbar=1 and time is dimensionless. There are no free fit parameters.
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/run_exact.py"
+```
+
+This runs from any directory and writes a new `results/exact_<timestamp>/` without overwriting previous runs. It uses the existing venv; no new dependencies were installed. Exact evolution does not import TensorCircuit/JAX or read variational data. Cache setup shared with Phase 1 now lives in `src/yuan2019_fig5/runtime.py`.
+
+The verified run is [results/exact_20261013_220047_446893](results/exact_20261013_220047_446893/):
+
+- [exact.npz](results/exact_20261013_220047_446893/exact.npz): `t` float64 `(1001,)`, `rho` complex128 `(1001,4,4)`, `z0` float64 `(1001,)`; `t_n=0.01*n`, including 0 and 10.
+- [exact_evolution.png](results/exact_20261013_220047_446893/exact_evolution.png): the Exact curve only, with the paper's main axis ranges; no variational markers or error inset.
+- [run_metadata.json](results/exact_20261013_220047_446893/run_metadata.json): model, units, grid, solver options, versions, code/data hashes and actual verification/comparison errors.
+
+QuTiP `mesolve` uses adaptive DOP853, `atol=1e-12`, `rtol=1e-10`, `normalize_output=False`; 0.01 is output spacing, not an Euler step. State trace/Hermiticity/positivity, analytic unit-rate damping, the full independently constructed NumPy generator, all 1001 states against SciPy matrix-exponential propagation, and a tighter ODE solve were checked. The maximum matrix-element discrepancy against that independent propagation is `2.844e-15` (tolerance `1e-9`). The combined Phase 1/2 suite passed: **7 tests**. Use the pytest command below to run it.
+
+This reproduces the specified Exact dynamics, with a documented difference in the published plot's time coordinates. Direct comparison to 940 PDF cyan-line vertices gives maximum discrepancy `1.106e-2`. A possible interpretation using 1000 samples across [0,10], displayed at j*0.01 for j=1..1000, reduces it to `1.790e-6`. This is a plotting-grid hypothesis, not confirmed author source code; the saved physical data are never shifted or fitted. Details and extraction provenance: [paper notes](papers/figure5_exact_source_zh.md). The paper's VQS-versus-Exact error target is not this plot-coordinate comparison.
+
+For the equation-to-code explanation, see [Exact learning notes](notes/exact_lindblad_zh.md). No later phase begins without the user's next instruction.
 
 ## Verified dependencies
 
@@ -81,4 +105,4 @@ Set the local cache variables above before installation. `/etc/ssl/cert.pem` is 
 - `results/`: small tracked Phase 1 verification and dependency records.
 - `.venv/` and `work/`: ignored environment, caches and temporary logs; no literature.
 
-TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax. Those optional features are outside the selected JAX circuit/AD path and were not installed. The small checks passed without them. This phase does not verify the full upstream test suites, GPU execution, the Figure 4 ansatz or Lindblad integration. Phase 2 requires separate user approval.
+TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during Phase 1 checks. Those optional features are outside the selected JAX circuit/AD path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution and the Figure 4/VQS implementation remain outside the completed work. Stop after Exact and wait for the user's next instruction.
