@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-当前应在 `phase0/planning`，工作区无待提交改动。main 跟踪 origin/main；规划分支尚无远程同名分支，这是未 push 的正常状态。
+Phase 1 已获用户授权并完成环境验证，当前阶段分支为 `phase1/environment`，从规划提交 `07ea9d7` 继续开发。阶段提交后工作区应无待提交改动。main 仍跟踪 origin/main；规划和环境分支均只保存在本地，这是未 push 的正常状态。
 
 如需检查仓库范围：
 
@@ -32,7 +32,7 @@ git rev-parse --show-toplevel
 git ls-files
 ```
 
-Git 根应精确返回本子项目路径。跟踪清单只含规划文档、规范及 .gitignore，不能含父工作区或论文。
+Git 根应精确返回本子项目路径。跟踪清单可含规划文档、规范、环境检查脚本、测试、固定依赖与小型验证记录，不能含 `.venv`、`work`、父工作区或论文。
 
 ## 后续本地阶段提交
 
@@ -53,4 +53,4 @@ git commit -m '<描述本阶段成果的提交说明>'
 
 ## 下一步
 
-审阅 `docs/Codex_Master_Prompt.md` 与项目 PROGRESS.md。仓库准备完成，停在规划阶段。得到用户针对 Phase 1 的明确批准后才建立 venv、安装兼容依赖并验证精度；后续各阶段也必须停下验收。未经单独批准不 push 或 merge。
+审阅项目 PROGRESS.md、README 与 `docs/environment.md`。Phase 1 的环境、CPU/64 位与基础自动微分已验证，当前停下等待用户验收。未实现 Exact/VQS，也不自动进入 Phase 2。未经单独批准不 push 或 merge。
