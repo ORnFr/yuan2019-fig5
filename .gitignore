@@ -25,4 +25,5 @@ bookandpaper/
 **/bookandpaper/
 *.pdf
 
-# Keep final reproducibility data and Figure 5 PNG tracked.
+# Keep generated vector figures in results; outside literature remains ignored.
+!results/**/*.pdf

@@ -1,6 +1,6 @@
 # Figure 5 reproduction progress
 
-日期：2026-10-14（Asia/Shanghai）。Phase 6原结果保留；用户另外授权dt=.005试算并合并新旧图，已完成。新2001点最大绝对误差.00567492，旧1001点为.00755849。停下等待本次实验验收，不自动扩大计算或上传。
+日期：2026-10-14（Asia/Shanghai）。dt=.005比较结果保留；按最新要求恢复原抽稀合并图，所有新图改为SVG/PDF。已有4种图已补上真实矢量版本，不重算演化，不自动扩大计算或上传。
 
 ## 完成与验证
 
@@ -94,6 +94,15 @@
 - [results/step_comparison_20261014_165015_516599](results/step_comparison_20261014_165015_516599/)保存新VQS/Exact完整NPZ、比较NPZ、单独dt005图、合并图与元数据。两PNG目视检查通过；数据读回逐元素一致。旧Exact/VQS/Phase 6目录内9份文件哈希前后一致，没有覆盖。
 - 主图旧橙圆/新紫空心三角，以相同物理间距.15显示；误差插图保留全部原生网格点，定义仍VQS−Exact。分别统计全部1001/2001点，共同点比较直接用新网格[::2]，不插值。
 - 从项目外实际运行全部测试：39 passed in 7.98s；新增细网格独有峰、嵌套网格、等物理标记间距和2001点读入检查。英文命令见README，[中文说明](notes/step_size_comparison_zh.md)已补充；未安装依赖、未提取原文误差图、未上传GitHub。
+
+## 显示恢复与矢量输出
+
+- 用户撤回全点显示，恢复原抽稀版。全点预览及其临时入口退回忽略的work，未覆盖旧图也未提交为最终成果；比较函数保持此前默认，每条曲线68个显示标记。真实计算仍1001/2001点，误差全部点不变。
+- 从 `bef4d57` 建立本地 `presentation/vector-figures`；新增统一 `vector_output.py`、既有数据复绘入口 `export_vector_figures.py`，将Exact/Phase 6/步长比较所有绘图入口改为SVG/PDF。环境smoke也改为内存SVG；未更改模型、线路、AD、SVD或演化核心。
+- [results/vectors_20261014_183719_166716](results/vectors_20261014_183719_166716/)含Exact、dt001、dt005、合并图各SVG/PDF，共8份矢量文件、运行与结构检查JSON。严格从保存数组重画，不用PNG包装。导出器拒绝位图和栅格化对象，并拒绝覆盖。
+- 所有SVG都有绘图路径且0个image元素；独立pypdf检查所有PDF均1页、存在矢量绘图操作及Time文字，0个内嵌图像。用已有Poppler渲染到work并逐图目视检查通过；未新增依赖。使用PDF技能检查，不违反文献只读边界。
+- 保留15份旧输出，前后哈希一致；数据和误差统计未变。测试实际 `42 passed in 7.83s`，含矢量写出、拒绝栅格化和禁止覆盖。AGENTS新增长期格式要求；.gitignore只放行results下生成PDF，仍排除文献。
+- 当前阶段提交以 `git log -1 --oneline presentation/vector-figures` 查询；不push、不merge。复绘命令及新文件链接见README，旧PNG作为历史结果保留，新图均矢量。
 
 ## 边界与后续限制
 

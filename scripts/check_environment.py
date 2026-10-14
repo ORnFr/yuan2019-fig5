@@ -159,7 +159,7 @@ def check_bell_circuit():
 
 
 def check_qutip_and_plotting():
-    """Check QuTiP matrix arithmetic and an in-memory Agg PNG render."""
+    """Check QuTiP matrix arithmetic and an in-memory SVG render."""
     state = qutip.basis(2, 0)
     matrix = state.full()
     assert matrix.shape == (2, 1) and matrix.dtype == np.complex128
@@ -168,11 +168,11 @@ def check_qutip_and_plotting():
     figure, axes = plt.subplots(figsize=(2, 2))
     axes.plot([0, 1], [0, 1])
     buffer = io.BytesIO()
-    figure.savefig(buffer, format="png")
+    figure.savefig(buffer, format="svg")
     plt.close(figure)
-    assert buffer.getvalue().startswith(b"\x89PNG\r\n\x1a\n")
+    assert b"<svg" in buffer.getvalue() and b"<image" not in buffer.getvalue()
     return {"qutip_matrix_dtype": str(matrix.dtype), "qutip_expectation": 1.0,
-            "matplotlib_backend": str(plt.get_backend()), "png_bytes": len(buffer.getvalue()),
+            "matplotlib_backend": str(plt.get_backend()), "svg_bytes": len(buffer.getvalue()),
             "qutip_cache": str(Path(qutip.settings.tmproot).relative_to(PROJECT))}
 
 

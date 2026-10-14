@@ -19,6 +19,7 @@ configure_project()
 import numpy as np
 import matplotlib.pyplot as plt
 from yuan2019_fig5.plot import load_trajectory, compare_trajectories, make_figure5
+from yuan2019_fig5.vector_output import save_vector_figure
 
 
 def verify_input_record(path):
@@ -36,7 +37,7 @@ def verify_input_record(path):
 
 
 def main():
-    """Validate input provenance and observables, save a unique comparison and PNG."""
+    """Validate input provenance and observables, save comparison and SVG/PDF."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--exact", default="results/exact_20261013_220047_446893/exact.npz")
     parser.add_argument("--vqs", default="results/vqs_20261014_161232_948193/vqs.npz")
@@ -68,13 +69,13 @@ def main():
         for key, expected in arrays.items():
             np.testing.assert_array_equal(loaded[key], expected)
     figure = make_figure5(arrays)
-    image_path = output / "figure5.png"
-    figure.savefig(image_path, dpi=240)
+    figure_paths = save_vector_figure(figure, output / "figure5")
     plt.close(figure)
     if any(name in sys.modules for name in ("qutip", "jax", "tensorcircuit")):
         raise RuntimeError("The plot entry point must not import evolution frameworks.")
     sources = [Path(__file__), PROJECT / "src/yuan2019_fig5/plot.py",
-               PROJECT / "src/yuan2019_fig5/runtime.py", PROJECT / "tests/test_plot.py"]
+               PROJECT / "src/yuan2019_fig5/runtime.py", PROJECT / "src/yuan2019_fig5/vector_output.py",
+               PROJECT / "tests/test_plot.py"]
     record = {
         "status": "Phase 6 comparison completed", "timestamp": datetime.now(timezone(timedelta(hours=8))).isoformat(),
         "command": '"$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/plot_figure5.py"',
@@ -85,7 +86,7 @@ def main():
         "metrics": metrics, "display": {"marker_stride": 15, "include_first_last_marker": True,
             "main_time_range": [0, 10], "main_z0_range": [-.2, 1],
             "error_inset": "All 1001 signed differences; symmetric range accommodates actual data",
-            "png_dpi": 240, "time_shift": False, "interpolation": False, "fitting": False},
+            "formats": ["svg", "pdf"], "time_shift": False, "interpolation": False, "fitting": False},
         "dynamics_rerun": False, "evolution_frameworks_imported": False,
         "python": platform.python_version(), "machine": platform.machine(),
         "packages": dict(sorted((dist.metadata["Name"], dist.version) for dist in metadata.distributions())),
@@ -93,7 +94,7 @@ def main():
         "source_sha256": {str(path.relative_to(PROJECT)): hashlib.sha256(path.read_bytes()).hexdigest() for path in sources},
         "code_parent_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=PROJECT, text=True).strip(),
         "artifacts": {path.name: {"path": str(path.relative_to(PROJECT)),
-            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for path in (comparison_path, image_path)},
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for path in [comparison_path, *figure_paths]},
         "limitations": ["Error target verified on the 1001 saved samples, not all continuous times",
             "No full-time step convergence or full-state error claim",
             "Author raw VQS arrays and explicit inset sign convention unavailable; no pointwise paper-error-curve equivalence claim",

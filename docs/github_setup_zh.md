@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`，Phase 4 Jacobian提交为 `cd327b6`，Phase 5 VQS提交为 `3136aeb`，Phase 6 Figure 5提交为 `bae0083`。用户另外授权dt=.005比较，当前分支为 `experiment/dt005`，从Phase 6提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。当前阶段哈希用 `git log -1 --oneline experiment/dt005` 查询。
+Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`，Phase 3 ansatz为 `3573a98`，Phase 4 Jacobian为 `cd327b6`，Phase 5 VQS为 `3136aeb`，Phase 6 Figure 5为 `bae0083`，dt=.005比较为 `bef4d57`。用户随后要求恢复抽稀合并图并统一矢量输出，当前分支为 `presentation/vector-figures`，从实验提交继续开发。main仍跟踪origin/main；各阶段分支均只保存在本地。当前阶段哈希用 `git log -1 --oneline presentation/vector-figures` 查询。
 
 如需检查仓库范围：
 

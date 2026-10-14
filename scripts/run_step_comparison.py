@@ -25,6 +25,7 @@ from yuan2019_fig5.exact import solve_lindblad, observable_values, density_diagn
 from yuan2019_fig5.validation import reference_liouvillian
 from yuan2019_fig5.plot import load_trajectory, compare_trajectories, make_figure5
 from yuan2019_fig5.step_comparison import compare_step_sizes, make_step_comparison
+from yuan2019_fig5.vector_output import save_vector_figure
 
 
 def main():
@@ -88,18 +89,18 @@ def main():
     new_figure.subplots_adjust(top=.91)
     new_figure.axes[0].set_title(r"VQS parameter Euler: $dt=0.005$", fontsize=11)
     merged_figure = make_step_comparison(comparisons)
-    for name, figure in (("figure5_dt005.png", new_figure), ("figure5_step_comparison.png", merged_figure)):
-        path = output / name
-        figure.savefig(path, dpi=240)
+    for name, figure in (("figure5_dt005", new_figure), ("figure5_step_comparison", merged_figure)):
+        paths = save_vector_figure(figure, output / name)
         plt.close(figure)
-        artifacts[name] = {"path": str(path.relative_to(PROJECT)),
-                           "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+        for path in paths:
+            artifacts[path.name] = {"path": str(path.relative_to(PROJECT)),
+                                   "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
     for name, digest in preserved.items():
         assert hashlib.sha256((PROJECT / name).read_bytes()).hexdigest() == digest, name
     sources = [Path(__file__), *(PROJECT / "src/yuan2019_fig5" / name for name in
         ("runtime.py", "vqs.py", "mclachlan.py", "model.py", "ansatz.py", "derivatives.py",
          "mclachlan_validation.py", "ansatz_validation.py", "derivatives_validation.py",
-         "exact.py", "validation.py", "plot.py", "step_comparison.py")), PROJECT / "tests/test_step_comparison.py"]
+         "exact.py", "validation.py", "plot.py", "step_comparison.py", "vector_output.py")), PROJECT / "tests/test_step_comparison.py"]
     record = {
         "status": "Authorized dt=.005 experiment complete; dt=.01 baseline preserved",
         "timestamp": datetime.now(timezone(timedelta(hours=8))).isoformat(),
@@ -117,7 +118,7 @@ def main():
         "metrics": metrics, "preserved_file_sha256": preserved,
         "display": {"coarse_stride": 15, "fine_stride": 30, "physical_marker_spacing": .15,
             "include_endpoints": True, "error_definition": "VQS - Exact", "error_thinning": False,
-            "png_dpi": 240, "interpolation": False, "time_shift": False},
+            "formats": ["svg", "pdf"], "interpolation": False, "time_shift": False},
         "python": platform.python_version(), "machine": platform.machine(),
         "packages": dict(sorted((dist.metadata["Name"], dist.version) for dist in metadata.distributions())),
         "requirements_sha256": hashlib.sha256((PROJECT / "requirements.txt").read_bytes()).hexdigest(),

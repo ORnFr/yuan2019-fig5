@@ -26,5 +26,5 @@ def test_entangled_state():
 
 
 def test_qutip_and_matplotlib():
-    """Check installed matrix arithmetic and headless PNG rendering."""
+    """Check installed matrix arithmetic and headless SVG rendering."""
     environment.check_qutip_and_plotting()

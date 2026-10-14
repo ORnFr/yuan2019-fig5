@@ -20,6 +20,8 @@ import matplotlib.pyplot as plt
 from yuan2019_fig5.exact import evolve_exact, SOLVER_OPTIONS, solve_lindblad, observable_values
 from yuan2019_fig5.model import build_model
 from yuan2019_fig5.validation import check_model_and_generator, check_analytic_damping, check_full_evolution
+from yuan2019_fig5.plot import make_exact_figure
+from yuan2019_fig5.vector_output import save_vector_figure
 
 
 def compare_published_line():
@@ -56,22 +58,15 @@ def compare_published_line():
 
 
 def plot_exact(times, values, output):
-    """Plot Z0 against dimensionless time with Figure 5's main axis limits."""
-    with plt.rc_context({"font.family": "serif", "font.size": 12,
-                         "axes.spines.top": True, "axes.spines.right": True}):
-        figure, axes = plt.subplots(figsize=(7, 4.8), constrained_layout=True)
-        axes.plot(times, values, color=(0.302, 0.745, 0.933), linewidth=1.8, label="Exact evolution")
-        axes.set(xlim=(0, 10), ylim=(-0.2, 1), xlabel="Time", ylabel=r"$\langle Z_0\rangle$")
-        axes.set_xticks(np.arange(0, 11, 2))
-        axes.set_yticks(np.arange(-0.2, 1.01, 0.2))
-        axes.tick_params(direction="in", top=True, right=True)
-        axes.legend(loc="lower right", frameon=True, fancybox=False, edgecolor="black")
-        figure.savefig(output, dpi=220)
-        plt.close(figure)
+    """Save the Exact-only figure as SVG/PDF using a suffix-free output path."""
+    figure = make_exact_figure(times, values)
+    paths = save_vector_figure(figure, output)
+    plt.close(figure)
+    return paths
 
 
 def main():
-    """Save a unique validated run with t/rho/z0, metadata and an Exact-only PNG."""
+    """Save a unique validated run with t/rho/z0, metadata and Exact-only vectors."""
     timestamp = datetime.now(timezone(timedelta(hours=8))).strftime("%Y%m%d_%H%M%S_%f")
     output_dir = PROJECT / "results" / f"exact_{timestamp}"
     output_dir.mkdir(exist_ok=False)
@@ -81,9 +76,8 @@ def main():
               "full_evolution": check_full_evolution(times, densities, values)}
     published_comparison = compare_published_line()
     data_path = output_dir / "exact.npz"
-    figure_path = output_dir / "exact_evolution.png"
     np.savez_compressed(data_path, t=times, rho=densities, z0=values)
-    plot_exact(times, values, figure_path)
+    figure_paths = plot_exact(times, values, output_dir / "exact_evolution")
     loaded = np.load(data_path, allow_pickle=False)
     for key, expected in (("t", times), ("rho", densities), ("z0", values)):
         np.testing.assert_array_equal(loaded[key], expected)
@@ -107,7 +101,7 @@ def main():
         "checks": checks, "published_line_comparison": published_comparison,
         "summary": {"z0_initial": float(values[0]), "z0_minimum": float(np.min(values)), "t_at_grid_minimum": float(times[np.argmin(values)]), "z0_at_t10": float(values[-1])},
         "artifacts": {name: {"path": str(path.relative_to(PROJECT)), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
-                      for name, path in (("data", data_path), ("figure", figure_path))},
+                      for name, path in [("data", data_path), *[(path.name, path) for path in figure_paths]]},
     }
     with (output_dir / "run_metadata.json").open("x", encoding="utf-8") as handle:
         json.dump(record, handle, indent=2, allow_nan=False)

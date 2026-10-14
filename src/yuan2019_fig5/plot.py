@@ -10,6 +10,24 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 
 
+def make_exact_figure(times, values):
+    """Return the Exact-only Z0 plot with the preserved main-axis conventions.
+
+    Inputs: dimensionless times and Re Tr(Z0 rho), float64 (N,), hbar=1.
+    This only draws saved values; it performs no evolution or interpolation.
+    """
+    with plt.rc_context({"font.family": "serif", "font.size": 12,
+                         "axes.spines.top": True, "axes.spines.right": True}):
+        figure, axes = plt.subplots(figsize=(7, 4.8), constrained_layout=True)
+        axes.plot(times, values, color=(.302, .745, .933), linewidth=1.8, label="Exact evolution")
+        axes.set(xlim=(0, 10), ylim=(-.2, 1), xlabel="Time", ylabel=r"$\langle Z_0\rangle$")
+        axes.set_xticks(np.arange(0, 11, 2))
+        axes.set_yticks(np.arange(-.2, 1.01, .2))
+        axes.tick_params(direction="in", top=True, right=True)
+        axes.legend(loc="lower right", frameon=True, fancybox=False, edgecolor="black")
+    return figure
+
+
 def load_trajectory(path, *, variational=False, dt=0.01, stop=10.0):
     r"""Read a saved uniform-grid trajectory and verify its physical Z0 data.
 

@@ -15,7 +15,27 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. The current local branch is `experiment/dt005`, based on Phase 6 commit `bae0083`; earlier branches are preserved. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. The current local branch is `presentation/vector-figures`, based on experiment commit `bef4d57`; earlier branches are preserved. No push or merge has been performed.
+
+## Figure output format: SVG and PDF
+
+The user requested the original thinned-marker layout and vector output for every figure. All current plotting entry points now produce **SVG and PDF only**. The 68-marker-per-run comparison layout is restored; actual data still have 1001/2001 samples. All old data and historical PNG outputs remain unchanged, and no dynamics were rerun for this format change.
+
+![Vector step-size overlay](results/vectors_20261014_183719_166716/figure5_step_comparison.svg)
+
+Verified vector editions are in [results/vectors_20261014_183719_166716](results/vectors_20261014_183719_166716/): `exact_evolution`, `figure5_dt001`, `figure5_dt005`, `figure5_step_comparison`, each as `.svg` and `.pdf`. They are redrawn from saved arrays, never PNGs inserted into PDF/SVG wrappers. SVG stores glyph outlines; PDF embeds TrueType fonts. Curves and markers remain vector objects at any zoom.
+
+To redraw these four existing results without recomputing dynamics:
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/export_vector_figures.py"
+```
+
+`save_vector_figure` rejects image artists and rasterized content, writes SVG/PDF without overwriting, and checks SVG for embedded images. Independent inspection of all four PDFs finds one page each, vector drawing operators, readable Time labels and **zero embedded images**; all four SVGs likewise contain paths and zero image elements. See `vector_checks.json`. All PDFs have also been rendered for visual review with no clipping or layout defects; those temporary review images stay in ignored `work/`. The suite passed **42 tests in 7.83s**, including vector-output/no-overwrite and raster rejection checks.
+
+The sections below retain historical numerical evidence and filenames. Those old PNGs are archival results, not the output format of future runs. Existing `run_exact.py`, `plot_figure5.py`, and `run_step_comparison.py` commands now save `.svg`/`.pdf` instead. Vector preference is recorded in AGENTS.md; generated PDFs under `results/` are allowed by `.gitignore` without admitting outside literature.
 
 ## Authorized step-size comparison
 
