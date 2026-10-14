@@ -1,0 +1,423 @@
+{
+  "status": "Authorized dt=.005 experiment complete; dt=.01 baseline preserved",
+  "timestamp": "2026-10-14T16:50:15.804549+08:00",
+  "command": "\"$FIG5_ROOT/.venv/bin/python\" \"$FIG5_ROOT/scripts/run_step_comparison.py\"",
+  "model": {
+    "H": "X tensor I + I tensor X + 0.25 Z tensor Z",
+    "collapse": [
+      "|0><1| tensor I",
+      "I tensor |0><1|"
+    ],
+    "gamma": [
+      1,
+      1
+    ],
+    "initial_state": "|00><00|",
+    "observable": "Z tensor I"
+  },
+  "basis": {
+    "wires": [
+      "a0",
+      "a1",
+      "s0",
+      "s1"
+    ],
+    "system": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ]
+  },
+  "units": "hbar=1; dimensionless time in field coefficient=1; real angles in radians",
+  "paper": {
+    "title": "Theory of variational quantum simulation",
+    "year": 2019,
+    "journal_url": "https://quantum-journal.org/papers/q-2019-10-07-191/",
+    "local_pdf_sha256": "e142a56c57c822a45fb22aea7e7b9a47f694a9c37842796a040c9f8d4c2053b7",
+    "pages": {
+      "equations_28_29": 11,
+      "figure4_equation62": 20,
+      "figure5": 21
+    },
+    "version": "Local 41-page journal-formatted PDF; accepted footer 2019-09-07"
+  },
+  "svd": {
+    "cutoff": "6 * eps(float64) * s_max",
+    "multiplier": 1,
+    "retained": "s > cutoff",
+    "method": "truncated minimum-norm least squares",
+    "full_condition": "Infinity when numerical rank<6; NPZ infinity is intentional",
+    "retained_condition": "s_max / smallest retained singular value"
+  },
+  "vqs_integrator": {
+    "method": "Forward Euler on parameters",
+    "dt": 0.005,
+    "stop": 10.0,
+    "points": 2001,
+    "initial_theta": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "first_step_special_handling": false
+  },
+  "change": "VQS parameter Euler dt .01 -> .005; no change to model, ansatz, initial parameters, SVD or integrator method",
+  "exact_reference": {
+    "solver_options": {
+      "method": "dop853",
+      "atol": 1e-12,
+      "rtol": 1e-10,
+      "nsteps": 2500,
+      "normalize_output": false,
+      "store_states": true,
+      "progress_bar": ""
+    },
+    "output_spacing": 0.005,
+    "interpretation": "Denser output grid only; Exact uses adaptive internal steps",
+    "exponential_max_rho_error": 2.9422219348702686e-15,
+    "old_common_grid_max_rho_difference": 1.0547580474745077e-15,
+    "reference_tolerance": 1e-09,
+    "density_checks": {
+      "max_trace_error": 1.3322989829338634e-15,
+      "max_hermiticity_frobenius_error": 2.9332575156639692e-16,
+      "minimum_eigenvalue": 0.0,
+      "all_finite": true
+    }
+  },
+  "vqs_exact_data_read": false,
+  "vqs_trajectory_checks": {
+    "points": 2001,
+    "trace_max_absolute_error": 9.992007221626409e-16,
+    "hermiticity_max_frobenius_error": 0.0,
+    "minimum_density_eigenvalue": 0.0,
+    "density_validity_tolerance": 1e-10,
+    "dense_reconstruction_max_absolute_error": 1.9428908043697803e-16,
+    "alignment_absolute_tolerance": 1e-12,
+    "rank_counts": {
+      "2": 1,
+      "6": 2000
+    },
+    "linear_residual_max": 6.416898537537873e-15,
+    "tangent_residual_max": 0.030877770230036586,
+    "retained_condition_max": 5077986880.43866,
+    "parameter_step_norm_max": 0.02233573332762755,
+    "final_z0": 0.12189971202980054
+  },
+  "saved_file_checks": {
+    "vqs": {
+      "trace_max_absolute_error": 9.992007221626409e-16,
+      "hermiticity_max_frobenius_error": 0.0,
+      "minimum_density_eigenvalue": 0.0,
+      "saved_z0_max_absolute_error": 1.1102230246251565e-16,
+      "physical_tolerance": 1e-10,
+      "observable_tolerance": 1e-12
+    },
+    "exact": {
+      "trace_max_absolute_error": 1.3322989829338634e-15,
+      "hermiticity_max_frobenius_error": 2.9332575156639692e-16,
+      "minimum_density_eigenvalue": 0.0,
+      "saved_z0_max_absolute_error": 0.0,
+      "physical_tolerance": 1e-10,
+      "observable_tolerance": 1e-12
+    }
+  },
+  "metrics": {
+    "coarse": {
+      "points": 1001,
+      "error_definition": "z0_vqs - z0_exact",
+      "max_absolute_error": 0.0075584895671799435,
+      "max_error_index": 256,
+      "time_at_max_absolute_error": 2.56,
+      "signed_error_at_max_absolute_error": 0.0075584895671799435,
+      "minimum_signed_error": -0.006860966610591379,
+      "maximum_signed_error": 0.0075584895671799435,
+      "rms_error": 0.003363036189909212,
+      "final_signed_error": -0.0001371874208003776,
+      "comparison_target": 0.01,
+      "strict_target_met": true
+    },
+    "fine": {
+      "points": 2001,
+      "error_definition": "z0_vqs - z0_exact",
+      "max_absolute_error": 0.005674923502228563,
+      "max_error_index": 496,
+      "time_at_max_absolute_error": 2.48,
+      "signed_error_at_max_absolute_error": 0.005674923502228563,
+      "minimum_signed_error": -0.005336553284005036,
+      "maximum_signed_error": 0.005674923502228563,
+      "rms_error": 0.0026236343099665005,
+      "final_signed_error": -0.00011594167063225247,
+      "comparison_target": 0.01,
+      "strict_target_met": true
+    },
+    "common_points": 1001,
+    "fine_common_max_absolute_error": 0.005674923502228563,
+    "max_step_difference": 0.0023855658193436824,
+    "time_at_max_step_difference": 2.89,
+    "rms_step_difference": 0.000914349076696864,
+    "max_exact_common_difference": 1.0547118733938987e-15,
+    "max_error_reduction_fraction": 0.24919873847945728
+  },
+  "preserved_file_sha256": {
+    "results/exact_20261013_220047_446893/exact.npz": "8f7efda0df30bc3647614de2420850c705c625ecf35408fda06bc2b3a49c37f2",
+    "results/exact_20261013_220047_446893/run_metadata.json": "daf3c48cc53c652c9cbcde679d95e02a05e90128c701fb361311b548f668fb38",
+    "results/exact_20261013_220047_446893/exact_evolution.png": "f7b575811931f1e98256e6dc172c3bb9c7268c2ad3e088ea4377ef766050e3f0",
+    "results/vqs_20261014_161232_948193/short_diagnostics.npz": "178f9d3bb2c424b95c08178ff4b682380636c3f0dc0bd76ba2134d19573f8c8a",
+    "results/vqs_20261014_161232_948193/run_metadata.json": "ce5003983f0943815d8c908d4a45aaa3db62da71140273b57ac207a04aabe281",
+    "results/vqs_20261014_161232_948193/vqs.npz": "9e14bc5ce7355ab67c9aeba277a41ebd6905c7c01435e518dcbfdb27707dc1c3",
+    "results/figure5_20261014_162632_671057/run_metadata.json": "7e57f7b570d92cb05c580fc1c1f1fa2a58f611f96766df894e88d655a5d3865a",
+    "results/figure5_20261014_162632_671057/comparison.npz": "ce3a0e2e31365bdcd930e2502683eb40fcc86b88d05929dd4b781acc4fb966c1",
+    "results/figure5_20261014_162632_671057/figure5.png": "afdafbdc27f40629802d45b9c93a654191dffa2ead3d08b102e2002a1e4e4939"
+  },
+  "display": {
+    "coarse_stride": 15,
+    "fine_stride": 30,
+    "physical_marker_spacing": 0.15,
+    "include_endpoints": true,
+    "error_definition": "VQS - Exact",
+    "error_thinning": false,
+    "png_dpi": 240,
+    "interpolation": false,
+    "time_shift": false
+  },
+  "python": "3.12.14",
+  "machine": "arm64",
+  "packages": {
+    "Pygments": "2.21.0",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.66.1",
+    "graphviz": "0.21",
+    "h5py": "3.16.0",
+    "iniconfig": "2.3.1",
+    "jax": "0.4.38",
+    "jaxlib": "0.4.38",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "ml_dtypes": "0.5.4",
+    "networkx": "3.7",
+    "numpy": "1.26.4",
+    "opt_einsum": "3.4.0",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "pip": "25.0.1",
+    "pluggy": "1.6.0",
+    "pyparsing": "3.3.3",
+    "pytest": "9.1.1",
+    "python-dateutil": "2.9.0.post0",
+    "qutip": "5.2.3",
+    "scipy": "1.15.3",
+    "six": "1.17.0",
+    "tensorcircuit": "0.12.0",
+    "tensornetwork-ng": "0.5.1"
+  },
+  "requirements_sha256": "0f0941c316e58d2cb648f4fe0a5939dfaf08bc6dbc5c472b1b71e7492d1047d0",
+  "source_sha256": {
+    "scripts/run_step_comparison.py": "92958646e117e616bbf896102620b94ee38063a36c7e14c42f76ddaa3ecf24a2",
+    "src/yuan2019_fig5/runtime.py": "d7b4053ffced1216562982c1bc3f4c567eeef340b8fc53de3b5a470d0bd0cb13",
+    "src/yuan2019_fig5/vqs.py": "44223f6f7d4bcd4f34cf5762b9fad15997c50b5fda3df6b329abe5b8716dfc59",
+    "src/yuan2019_fig5/mclachlan.py": "553a9680e767ccdb77c5aa2349d8a907345e3bbe69fe428969fc1d49d17edf84",
+    "src/yuan2019_fig5/model.py": "edddbb1754ea507c38cdaf575f2e9147b3ef304b0a14b0b4a126effc3a9cab9c",
+    "src/yuan2019_fig5/ansatz.py": "cd1afcdb023de6ac8105f8f6e1e3ad445059becc6880e6d9c8a7ac707d1533c5",
+    "src/yuan2019_fig5/derivatives.py": "8d882b1e2129a95541144cd72b8a4307d7768908d11421ad86a9a8916196a561",
+    "src/yuan2019_fig5/mclachlan_validation.py": "13813d9701622c0bbb9e4bb5a2d253d9d5fbb1cc9c44e42a6960efabbe46a791",
+    "src/yuan2019_fig5/ansatz_validation.py": "7c516ea4770502a25acf0ee8a9a1f2df12f2f6b9976b3f3dd86807f23c9f877d",
+    "src/yuan2019_fig5/derivatives_validation.py": "5ef8aeb0b2e112033a7a6b6f3a91ef6c3c8644ed23562b14d950548bb37cb11e",
+    "src/yuan2019_fig5/exact.py": "de4f8699c9c0ec68f6480fdd337868ba12ecf23730f470e790753c2b35186439",
+    "src/yuan2019_fig5/validation.py": "ba7f1c553e43bd7083366fb4bb3d75d49dfa46882aa81dd824f18ff987949806",
+    "src/yuan2019_fig5/plot.py": "f4067fa9c6e887da41c65832e5357211b4f4b85bbe8233d8b84e72aca60f22a1",
+    "src/yuan2019_fig5/step_comparison.py": "1ae96a1acc1970ec1ddc1517a0b5dc9f7800529dee388d93d1cd3196f413513e",
+    "tests/test_step_comparison.py": "a76b3beed61e408b285833e5d9919950fdd5259b035c2c27d80d1d36348c3d7c"
+  },
+  "code_parent_commit": "bae008327e80511e53fb1cb05eefb05c5cfd3b0b",
+  "artifacts": {
+    "vqs_dt005.npz": {
+      "path": "results/step_comparison_20261014_165015_516599/vqs_dt005.npz",
+      "sha256": "fc9c035f8ae1362066265f83d0e804b939cba9fa5b700fac78a41f8e886a3f29",
+      "shapes": {
+        "t": [
+          2001
+        ],
+        "theta": [
+          2001,
+          6
+        ],
+        "rho": [
+          2001,
+          4,
+          4
+        ],
+        "z0": [
+          2001
+        ],
+        "theta_dot": [
+          2001,
+          6
+        ],
+        "M": [
+          2001,
+          6,
+          6
+        ],
+        "V": [
+          2001,
+          6
+        ],
+        "singular_values": [
+          2001,
+          6
+        ],
+        "rank": [
+          2001
+        ],
+        "parameter_step": [
+          2000,
+          6
+        ],
+        "cutoff": [
+          2001
+        ],
+        "full_condition": [
+          2001
+        ],
+        "retained_condition": [
+          2001
+        ],
+        "linear_residual": [
+          2001
+        ],
+        "tangent_residual": [
+          2001
+        ],
+        "trace_error": [
+          2001
+        ],
+        "hermiticity_error": [
+          2001
+        ],
+        "minimum_eigenvalue": [
+          2001
+        ],
+        "m_imaginary": [
+          2001
+        ],
+        "v_imaginary": [
+          2001
+        ],
+        "m_symmetry": [
+          2001
+        ],
+        "m_minimum_eigenvalue": [
+          2001
+        ]
+      },
+      "dtypes": {
+        "t": "float64",
+        "theta": "float64",
+        "rho": "complex128",
+        "z0": "float64",
+        "theta_dot": "float64",
+        "M": "float64",
+        "V": "float64",
+        "singular_values": "float64",
+        "rank": "int64",
+        "parameter_step": "float64",
+        "cutoff": "float64",
+        "full_condition": "float64",
+        "retained_condition": "float64",
+        "linear_residual": "float64",
+        "tangent_residual": "float64",
+        "trace_error": "float64",
+        "hermiticity_error": "float64",
+        "minimum_eigenvalue": "float64",
+        "m_imaginary": "float64",
+        "v_imaginary": "float64",
+        "m_symmetry": "float64",
+        "m_minimum_eigenvalue": "float64"
+      }
+    },
+    "exact_dt005.npz": {
+      "path": "results/step_comparison_20261014_165015_516599/exact_dt005.npz",
+      "sha256": "986affa82311ca7b263b3ee07f28d3c7aad5a0ff3d1f2ebd7519a16006eaf867",
+      "shapes": {
+        "t": [
+          2001
+        ],
+        "rho": [
+          2001,
+          4,
+          4
+        ],
+        "z0": [
+          2001
+        ]
+      },
+      "dtypes": {
+        "t": "float64",
+        "rho": "complex128",
+        "z0": "float64"
+      }
+    },
+    "comparison.npz": {
+      "path": "results/step_comparison_20261014_165015_516599/comparison.npz",
+      "sha256": "efd85cb6a8750006c0085c09c0975c158e468b25681f8d62d7fec70d026c2a54",
+      "shapes": {
+        "coarse_t": [
+          1001
+        ],
+        "coarse_z0_exact": [
+          1001
+        ],
+        "coarse_z0_vqs": [
+          1001
+        ],
+        "coarse_error": [
+          1001
+        ],
+        "fine_t": [
+          2001
+        ],
+        "fine_z0_exact": [
+          2001
+        ],
+        "fine_z0_vqs": [
+          2001
+        ],
+        "fine_error": [
+          2001
+        ],
+        "fine_minus_coarse_common": [
+          1001
+        ]
+      },
+      "dtypes": {
+        "coarse_t": "float64",
+        "coarse_z0_exact": "float64",
+        "coarse_z0_vqs": "float64",
+        "coarse_error": "float64",
+        "fine_t": "float64",
+        "fine_z0_exact": "float64",
+        "fine_z0_vqs": "float64",
+        "fine_error": "float64",
+        "fine_minus_coarse_common": "float64"
+      }
+    },
+    "figure5_dt005.png": {
+      "path": "results/step_comparison_20261014_165015_516599/figure5_dt005.png",
+      "sha256": "9ced9aeae58253fcbecc7156bcfcdb9d6e6e15a18f87db54dd42ac1564c6a7e1"
+    },
+    "figure5_step_comparison.png": {
+      "path": "results/step_comparison_20261014_165015_516599/figure5_step_comparison.png",
+      "sha256": "f639deba10843d351e903243dc2ba158291015b382289d5a7368b3b1c12872d5"
+    }
+  },
+  "limitations": [
+    "Two step sizes do not establish convergence order or the dt->0 limit",
+    "Total Z0 error includes representation and discretization effects; these are not separated",
+    "No comparison to author raw data or original error inset"
+  ]
+}

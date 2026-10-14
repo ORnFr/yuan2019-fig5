@@ -10,28 +10,35 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 
 
-def load_trajectory(path, *, variational=False):
-    r"""Read a saved 1001-point baseline and verify its physical Z0 data.
+def load_trajectory(path, *, variational=False, dt=0.01, stop=10.0):
+    r"""Read a saved uniform-grid trajectory and verify its physical Z0 data.
 
-    Required arrays: t/z0 float64 (1001,), rho complex128 (1001,4,4);
-    VQS also requires theta float64 (1001,6). Basis |00>,|01>,|10>,|11>,
-    hbar=1, dimensionless t_n=.01*n. Z0=Z tensor I, expectation
+    Required arrays: t/z0 float64 (N,), rho complex128 (N,4,4);
+    VQS also requires theta float64 (N,6), N=stop/dt+1. The default baseline
+    has 1001 points. Basis |00>,|01>,|10>,|11>, hbar=1, dimensionless
+    t_n=dt*n. Z0=Z tensor I, expectation
     z0_n=Re Tr(Z0 rho_n). No interpolation, shift or state repair.
     """
+    if not np.isfinite(dt) or not np.isfinite(stop) or dt <= 0 or stop <= 0:
+        raise ValueError("dt and stop must be finite and positive.")
+    steps = round(stop / dt)
+    if steps < 1 or not np.isclose(steps * dt, stop, atol=1e-12, rtol=0):
+        raise ValueError("stop must be an integer multiple of dt.")
+    count = steps + 1
     required = ["t", "rho", "z0"] + (["theta"] if variational else [])
     with np.load(Path(path), allow_pickle=False) as loaded:
         if not set(required).issubset(loaded.files):
             raise ValueError(f"Missing trajectory arrays in {path}.")
         arrays = {name: loaded[name].copy() for name in required}
-    shapes = {"t": (1001,), "rho": (1001, 4, 4), "z0": (1001,), "theta": (1001, 6)}
+    shapes = {"t": (count,), "rho": (count, 4, 4), "z0": (count,), "theta": (count, 6)}
     for name, array in arrays.items():
         dtype = np.complex128 if name == "rho" else np.float64
         if array.shape != shapes[name] or array.dtype != dtype:
             raise ValueError(f"Invalid shape/dtype for {name}: {array.shape}, {array.dtype}.")
         if not np.all(np.isfinite(array)):
             raise ValueError(f"Nonfinite {name} in {path}.")
-    if not np.array_equal(arrays["t"], .01 * np.arange(1001)):
-        raise ValueError("Baseline grid must be exactly t_n=.01*n, n=0,...,1000.")
+    if not np.array_equal(arrays["t"], dt * np.arange(count)):
+        raise ValueError("Trajectory grid must exactly match the requested dt and stop.")
     density = arrays["rho"]
     trace_error = float(np.max(abs(np.trace(density, axis1=1, axis2=2) - 1)))
     hermiticity_error = float(np.max(np.linalg.norm(density - density.conj().swapaxes(1, 2), axis=(1, 2))))
@@ -92,7 +99,7 @@ def compare_trajectories(exact, variational):
 def make_figure5(arrays, *, marker_stride=15):
     r"""Return a Matplotlib figure with Exact line, VQS dots and signed-error inset.
 
-    Inputs: t,z0_exact,z0_vqs,error, float64 (1001,). Marker stride affects
+    Inputs: t,z0_exact,z0_vqs,error, float64 (N,). Marker stride affects
     only display; the Exact line and error inset use all saved points.
     Main limits follow Figure 5 (PDF/printed p21): t=[0,10], Z0=[-.2,1].
     The inset range adapts to the actual signed error, preserving every point.

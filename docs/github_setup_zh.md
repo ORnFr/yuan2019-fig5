@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`，Phase 4 Jacobian提交为 `cd327b6`，Phase 5 VQS提交为 `3136aeb`。用户以“A”验收Phase 5并批准Phase 6，当前分支为 `phase6/figure5`，从VQS提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。当前阶段哈希用 `git log -1 --oneline phase6/figure5` 查询。
+Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`，Phase 4 Jacobian提交为 `cd327b6`，Phase 5 VQS提交为 `3136aeb`，Phase 6 Figure 5提交为 `bae0083`。用户另外授权dt=.005比较，当前分支为 `experiment/dt005`，从Phase 6提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。当前阶段哈希用 `git log -1 --oneline experiment/dt005` 查询。
 
 如需检查仓库范围：
 
@@ -53,4 +53,4 @@ git commit -m '<描述本阶段成果的提交说明>'
 
 ## 下一步
 
-审阅项目PROGRESS.md、README与Phase 6 Figure 5/全点比较：最大Z0差0.00755849<.01。当前停下等待最终验收和下一步选择，未自动开展额外收敛研究。验收不隐含上传授权；未经单独批准不push或merge。
+审阅项目PROGRESS.md、README与用户授权的dt005比较：最大Z0误差.00567492，原dt001结果.00755849保留。当前停下等待验收和下一步选择，未自动扩大到dt=.0025。验收不隐含上传授权；未经单独批准不push或merge。

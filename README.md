@@ -2,6 +2,8 @@
 
 Phase 6 is complete and awaiting user acceptance. The Figure 5 comparison has been generated from the accepted Exact/VQS baselines. Maximum absolute Z0 error across all 1001 saved points is **0.0075584896**, below the 0.01 comparison target. This does not establish pointwise agreement with the author's unavailable raw arrays or continuous-time/full-state accuracy.
 
+The user subsequently authorized a separate dt=0.005 experiment while preserving the dt=0.01 results. That experiment and its overlay are complete: maximum error over 2001 points is **0.0056749235**, about 24.92% smaller. The baseline remains unchanged.
+
 Target: mixed-state variational quantum simulation of the two-qubit Lindblad model in Figure 5 of [Yuan et al. (2019)](https://quantum-journal.org/papers/q-2019-10-07-191/).
 
 - Exact reference: QuTiP.
@@ -13,7 +15,40 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 6 uses local branch `phase6/figure5`, based on VQS commit `3136aeb`; earlier branches are preserved. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. The current local branch is `experiment/dt005`, based on Phase 6 commit `bae0083`; earlier branches are preserved. No push or merge has been performed.
+
+## Authorized step-size comparison
+
+![Step-size comparison](results/step_comparison_20261014_165015_516599/figure5_step_comparison.png)
+
+The original Figure 5 and input trajectories stay in their original run folders. The comparison runs the same six-zero initial parameters, ansatz, model, AD, SVD cutoff and parameter Forward Euler through t=10, changing only dt=.01 to .005. It separately evaluates Exact on the 2001 fine output times using unchanged adaptive DOP853 tolerances. Exact output spacing is not its internal integration step; no Exact interpolation or VQS fitting is used.
+
+Run from any directory:
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/run_step_comparison.py"
+```
+
+This creates a unique `results/step_comparison_<timestamp>/`. The verified run is [results/step_comparison_20261014_165015_516599](results/step_comparison_20261014_165015_516599/):
+
+- `vqs_dt005.npz`: all 2001 states/parameters/observables and diagnostics, plus 2000 applied updates.
+- `exact_dt005.npz`: independently evaluated fine-grid t/rho/z0.
+- `comparison.npz`: native-grid `coarse_*` (1001 points), `fine_*` (2001 points), signed errors and `fine_minus_coarse_common` on the shared 1001 times.
+- `figure5_dt005.png`: the new result alone; `figure5_step_comparison.png`: both VQS curves and both signed-error curves overlaid. Both PNGs are 1680x1296 at 240 dpi.
+- `run_metadata.json`: unchanged physical/numerical choices, versions, code/data digests, actual checks and before/after hashes for all nine preserved old artifacts.
+
+| VQS parameter step | Native-grid maximum Z0 error | Time | RMS error |
+| --- | --- | --- | --- |
+| .01 (preserved) | .00755848956718 | 2.56 | .00336303618991 |
+| .005 (new) | .00567492350223 | 2.48 | .00262363430997 |
+
+The maximum error decreases by 24.92%; the largest new/old Z0 difference on common times is .00238556581934 at t=2.89. Both error curves use `VQS - Exact` with every native-grid point. Display markers share .15 physical spacing (old stride15, new stride30). There is no time shift or interpolation, and no reassignment of the baseline.
+
+All fine VQS states pass physical checks (trace error 9.992e-16, Hermiticity error zero, minimum eigenvalue zero; tolerance1e-10), parameter/time alignment and independent density reconstruction (tolerance1e-12). New Exact states agree with independent matrix-exponential propagation to 2.942e-15 and with old Exact states at common times to 1.055e-15 (reference tolerance1e-9). All NPZ arrays were read back; both PNGs were visually checked. The suite passed **39 tests in 7.98s** from outside the project. The scientific dependencies and evolution core code are unchanged.
+
+Two step sizes show sensitivity and an observed improvement; they do not establish the convergence order or zero-step limit, and total error has not been separated into representation/discretization contributions. See [Chinese explanation](notes/step_size_comparison_zh.md). Stop after this authorized experiment.
 
 ## Figure 5: compare saved baselines
 
@@ -216,6 +251,7 @@ Set the local cache variables above before installation. `/etc/ssl/cert.pem` is 
 - `src/yuan2019_fig5/`: separate Exact, circuit, derivative and VQS modules with validation references.
 - `scripts/run_vqs.py`: independently validated Phase 5 baseline entry point.
 - `scripts/plot_figure5.py`: reads recorded Exact/VQS baselines and compares/plots them independently.
+- `scripts/run_step_comparison.py`: authorized dt=.005 experiment and preserved-baseline overlay.
 - `requirements.txt`: the single pinned installation specification.
 - `docs/`: approved master plan, setup guide, environment rationale and Chinese learning notes.
 - `results/`: tracked verification records and small Exact/VQS data; existing results are preserved.
