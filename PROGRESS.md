@@ -1,6 +1,6 @@
 # Figure 5 reproduction progress
 
-日期：2026-10-14（Asia/Shanghai）。用户已确认 Exact 结果无误，并批准 Phase 3；Figure 4 线路、purification 与部分迹已完成并验证，停下等待验收与下一步选择。
+日期：2026-10-14（Asia/Shanghai）。用户已明确批准Phase 4；系统密度矩阵Jacobian、独立解析/乘积法则与有限差分验证已完成，停下等待验收与下一步选择。
 
 ## 完成与验证
 
@@ -48,15 +48,27 @@
 - 从项目外实际运行合并测试：`16 passed in 2.63s`；`pip check`通过；未新增依赖。Exact核心代码、已验收结果和固定依赖均无改动。运行命令见README，[中文公式与代码说明](notes/ansatz_purification_zh.md)已完成。
 - 已把用户要求的“完成反馈提供2–3个简单下一步选项”写入本项目AGENTS.md，供后续阶段沿用。
 
+## Phase 4：系统密度矩阵Jacobian
+
+- 从干净的ansatz提交 `3573a98` 创建本地 `phase4/derivatives`，保留先前分支。阶段提交编号用 `git log -1 --oneline phase4/derivatives` 查询。
+- 新增 `derivatives.py`：分别对rho实部、虚部 `jax.jacfwd`，合并并将参数轴从末尾搬到首位，输出complex128 `(6,4,4)`。参数是实弧度，没有holomorphic=True、NumPy转换、FD替代AD或导数修复。
+- 实际提取并目视核对只读论文PDF/印刷第11页Eq.(26)、(28)/(29)。相关段落i/j下标不一致不作为不同参数导数相等的依据；严格逐参数验证D_i†=D_i。详细[来源与方法记录](papers/phase4_derivatives_source_zh.md)和[中文推导](notes/density_derivatives_zh.md)已完成。
+- 17组零/非零参数（随机种子2019）的AD与独立NumPy/SciPy门乘积法则、完整密度导数块求和比较：最大元素误差5.551e-16；零点独立commutator解析误差4.441e-16，容差1e-12。
+- 初点D2=D5=0、D3=2D0、D4=2D1，六个Frobenius范数约(0.7071,0.7071,0,1.4142,1.4142,0)，只有两个独立第一阶系统密度方向。保留完整Jacobian和零参数初态，不通过扰动或截断修改它；没有计算M/V/谱或求解。
+- 四个参数FD步长1e-3/1e-4/1e-5/1e-6的最大绝对差分别6.667e-7/6.667e-9/6.667e-11/1.474e-10，满足逐步长绝对与相对容差。相对误差以独立导数Frobenius范数为分母；12个范数≤1e-12方向标记为未定义，未当作零相对误差。
+- 导数迹最大误差2.238e-16、厄米Frobenius误差0（容差1e-12）；JVP方向导数比较差2.220e-16、JIT比较差0，CPU/complex128检查通过。未对导数施加正定性要求，因为它不是密度矩阵。
+- 数据及软件/代码哈希元数据位于 [results/derivatives_20261014_154702_356659](results/derivatives_20261014_154702_356659/)，含参数、rho、AD/独立Jacobian及逐参数FD误差/mask。NPZ读回逐元素一致；检查脚本从项目外运行。命令见README。
+- 从 `/private/tmp` 实际运行合并测试：`22 passed in 7.11s`；pip check通过。没有安装或修改依赖；先前Exact/ansatz核心代码和已验收结果均无改动；只在本子项目写输出。
+
 ## 边界与未开始工作
 
 - 没有 push 或 merge，也没有通过连接器上传本地文件。
 - /Users/ornfr/Desktop/bookandpaper 严格只读、处于 Git 根之外，未复制或链接进项目。
 - `.venv`、缓存、临时日志均在本子项目并由现有 `.gitignore` 排除；只跟踪本阶段必要代码、文档及小型验证记录。
-- 已完成Exact曲线和Figure 4静态线路/部分迹；未实现ansatz密度矩阵Jacobian、McLachlan或VQS演化，未完成含变分点/误差插图的完整Figure 5。
+- 已完成Exact曲线、Figure 4静态线路/部分迹及其密度矩阵Jacobian；未实现McLachlan、参数求解或VQS演化，未完成含变分点/误差插图的完整Figure 5。
 - 未运行上游完整测试套件、第二个全新环境重建或 GPU 检查。TensorCircuit 可提示缺少未使用的 Qiskit/Cirq/cloud/Optax；未为消除提示安装额外框架。环境依赖现有基础 Python 3.12 路径，迁移需重建并复验。
-- 当前停在Phase 3交付；不自动进入Phase 4或后续阶段。
+- 当前停在Phase 4交付；不自动进入Phase 5或后续阶段。
 
 ## 下一步
 
-等待用户验收Phase 3并选择：A验收后执行Phase 4的密度矩阵自动微分与有限差分验证；B先解释purification/部分迹；C先逐段讲解代码。Phase 4及McLachlan/VQS均不自动开始；本次不push、不merge。
+等待用户选择：A验收并进入Phase 5的M/V、秩亏诊断、SVD求解与基线演化；B先解释初点的零/冗余方向；C先逐段讲解Jacobian代码。Phase 5须另获明确授权；涉及改变初态、参数化、积分器或正则化的方案仍按既有规划先给出证据并等待批准。本次不push、不merge。

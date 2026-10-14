@@ -1,6 +1,6 @@
 # Yuan et al. (2019) Figure 5 reproduction
 
-Phase 3 (Figure 4 ansatz and system partial trace) is complete and awaiting user acceptance. The user has accepted the Exact result. No ansatz Jacobian, McLachlan or VQS time evolution has been implemented.
+Phase 4 (reduced-density Jacobian) is complete and awaiting user acceptance. The user authorized Phase 4 after the ansatz delivery. No McLachlan matrix, parameter solve or VQS time evolution has been implemented.
 
 Target: mixed-state variational quantum simulation of the two-qubit Lindblad model in Figure 5 of [Yuan et al. (2019)](https://quantum-journal.org/papers/q-2019-10-07-191/).
 
@@ -13,7 +13,30 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 3 uses local branch `phase3/ansatz`, based on the accepted Exact commit `41654c3`; earlier branches are preserved. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 4 uses local branch `phase4/derivatives`, based on ansatz commit `3573a98`; earlier branches are preserved. No push or merge has been performed.
+
+## Reduced-density Jacobian
+
+`src/yuan2019_fig5/derivatives.py` provides `density_jacobian(theta)` for six real paper angles. It returns JAX complex128 `D[i,s,t] = partial rho_S[s,t] / partial theta_i`, shape `(6,4,4)`, in the existing system basis `|00>,|01>,|10>,|11>`. It uses `jax.jacfwd` separately on the real and imaginary density components, combines them, and moves the parameter axis from last to first. It preserves the conjugation-containing real-parameter map without `holomorphic=True`, NumPy conversion or finite differences in production.
+
+Run from any directory:
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/check_derivatives.py"
+```
+
+This writes a unique `results/derivatives_<timestamp>/`. The verified run is [results/derivatives_20261014_154702_356659](results/derivatives_20261014_154702_356659/):
+
+- `derivative_samples.npz`: parameters `(17,6)`, densities `(17,4,4)`, AD and independent dense Jacobians `(17,6,4,4)`, four FD steps, per-case/parameter absolute and relative errors and their defined-relative mask. This is validation data, not an evolution trajectory.
+- `run_metadata.json`: conventions, versions, code/data hashes, tolerances and actual numerical results.
+
+All 17 cases were checked against an independent NumPy/SciPy gate-product derivative and full-density partial trace, with maximum absolute error `5.551e-16` (tolerance `1e-12`). Derivative trace error is `2.238e-16`, Hermiticity Frobenius error is zero. Central differences at `h=1e-3,1e-4,1e-5,1e-6` give maximum absolute errors `6.667e-7,6.667e-9,6.667e-11,1.474e-10`, below recorded step-dependent tolerances. Relative Frobenius errors use analytic derivative norms; directions with norms <=1e-12 have undefined relative error and must be interpreted using the saved mask, not as exact zero error. Complex-output JVP and JIT agree within tolerance. The combined suite passed **22 tests**; `pip check` still passes with unchanged dependencies.
+
+At zero parameters, independent commutator formulas confirm `D2=D5=0`, `D3=2*D0`, `D4=2*D1`. There are two independent first-order density directions, not six. No initial perturbation, derivative normalization, symmetrization or trace repair was applied. The McLachlan matrix and its rank/spectrum/solve remain for a separately approved Phase 5. Derivatives are tangent matrices and are not required to be positive density matrices.
+
+See [Chinese derivation and code notes](notes/density_derivatives_zh.md) and [source/method review](papers/phase4_derivatives_source_zh.md). Earlier Exact/ansatz code and accepted results are unchanged. Stop after Phase 4 for user acceptance.
 
 ## Figure 4 ansatz and partial trace
 
@@ -38,7 +61,7 @@ It writes a unique `results/ansatz_<timestamp>/` without overwriting prior resul
 
 The 17 parameter cases include zero, each individual parameter, two generic cases (one maximally mixed reduced state) and eight random cases with seed 2019. Independent validation constructs 16x16 dense operators; partial trace is additionally checked by summing full-density blocks, six analytic/random examples, and QuTiP ptrace. State and density maximum absolute errors are `1.570e-16` and `2.225e-16`; tolerance is `1e-12`. Trace, Hermiticity, eigenvalues, bit significance, the Z0-to-wire2 mapping and forward-only JIT also passed. The combined suite passed **16 tests**; use the pytest command below.
 
-The existing Exact code/data and fixed requirements are unchanged, and `pip check` still passes. No ansatz derivatives were computed; preserving the JAX array path and checking forward JIT do not certify Phase 4 derivative correctness. Source/gate review: [paper notes](papers/figure4_ansatz_source_zh.md). Formula-to-code explanation: [Chinese learning notes](notes/ansatz_purification_zh.md). Stop here for user acceptance.
+The Phase 3 checks establish the circuit and forward partial trace. Derivative validation is recorded separately in the Phase 4 section above. Source/gate review: [paper notes](papers/figure4_ansatz_source_zh.md). Formula-to-code explanation: [Chinese learning notes](notes/ansatz_purification_zh.md).
 
 ## Exact evolution: run and outputs
 
@@ -130,4 +153,4 @@ Set the local cache variables above before installation. `/etc/ssl/cert.pem` is 
 - `results/`: small tracked Phase 1 verification and dependency records.
 - `.venv/` and `work/`: ignored environment, caches and temporary logs; no literature.
 
-TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the environment/ansatz checks. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution, the ansatz Jacobian and VQS evolution remain outside the completed work. Stop after Phase 3 and wait for the user's next instruction.
+TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the environment/ansatz/derivative checks. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution, McLachlan equations and VQS evolution remain outside the completed work. Stop after Phase 4 and wait for the user's next instruction.

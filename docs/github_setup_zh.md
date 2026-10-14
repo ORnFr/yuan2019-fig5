@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-Phase 1 环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收。当前阶段分支为 `phase3/ansatz`，从该Exact提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。
+Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`。用户随后批准Phase 4，当前分支为 `phase4/derivatives`，从ansatz提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。
 
 如需检查仓库范围：
 
@@ -53,4 +53,4 @@ git commit -m '<描述本阶段成果的提交说明>'
 
 ## 下一步
 
-审阅项目PROGRESS.md、README和Phase 3线路/部分迹验证。当前停下等待用户验收和下一步选择。未实现ansatz Jacobian或VQS，不自动进入后续阶段。未经单独批准不push或merge。
+审阅项目PROGRESS.md、README和Phase 4密度矩阵Jacobian验证。当前停下等待用户验收和下一步选择。未实现McLachlan或VQS，不自动进入后续阶段。未经单独批准不push或merge。
