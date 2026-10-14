@@ -1,6 +1,6 @@
 # Phase 1：环境与基础求导检查
 
-后续已完成的 Exact 演化学习说明见 [notes/exact_lindblad_zh.md](../notes/exact_lindblad_zh.md)，原图核对与采样差异见 [papers/figure5_exact_source_zh.md](../papers/figure5_exact_source_zh.md)。下文保留 Phase 1 学习记录。
+后续已完成的 Exact 演化说明见 [notes/exact_lindblad_zh.md](../notes/exact_lindblad_zh.md)，原图核对见 [papers/figure5_exact_source_zh.md](../papers/figure5_exact_source_zh.md)。Figure 4 线路与部分迹说明见 [notes/ansatz_purification_zh.md](../notes/ansatz_purification_zh.md)。下文保留 Phase 1 学习记录。
 
 日期：2026-10-13。这里只验证计算工具，没有开始论文 Figure 5 的时间演化。英文运行命令见项目 README，版本选择与实际数值证据见 `docs/environment.md` 和 `results/phase1_environment_20261013_212040_737785.json`。
 

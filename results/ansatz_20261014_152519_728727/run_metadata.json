@@ -1,0 +1,186 @@
+{
+  "status": "passed",
+  "scope": "Phase 3 Figure 4 circuit/partial trace only; no derivatives or evolution",
+  "timestamp": "2026-10-14T15:25:19.730340+08:00",
+  "command": "\"$FIG5_ROOT/.venv/bin/python\" \"$FIG5_ROOT/scripts/check_ansatz.py\"",
+  "source": {
+    "doi": "10.22331/q-2019-10-07-191",
+    "figure": 4,
+    "pdf_page": 20,
+    "printed_page": 20,
+    "pdf_sha256": "e142a56c57c822a45fb22aea7e7b9a47f694a9c37842796a040c9f8d4c2053b7"
+  },
+  "ansatz": {
+    "wires": {
+      "a0": 0,
+      "a1": 1,
+      "s0": 2,
+      "s1": 3
+    },
+    "full_basis": "|a0 a1 s0 s1>, lexicographic binary order, wire0 most significant",
+    "system_basis": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ],
+    "initial_full_state": "|0000>",
+    "zero_parameter_full_state": "|++>_A tensor |00>_S",
+    "parameter_shape": [
+      6
+    ],
+    "rotation_definition": "RX(theta)=exp(-i theta X); RZZ(theta)=exp(-i theta ZZ); CRX controlled on 1",
+    "library_convention": "RX/CRX angle=2*paper theta; RZZ angle=2*paper theta, half=True explicitly",
+    "gate_order": [
+      "H(a0)",
+      "H(a1)",
+      "CRX(a0,s0,theta0)",
+      "CRX(a1,s1,theta1)",
+      "RZZ(s0,s1,theta2)",
+      "RX(s0,theta3)",
+      "RX(s1,theta4)",
+      "RZZ(s0,s1,theta5)"
+    ],
+    "units": "Dimensionless angles in radians; no physical time or parameter evolution",
+    "reduction": "A[a,s]=reshape(psi,(4,4)); rho[s,t]=sum_a A[a,s]*conj(A[a,t])",
+    "postprocessing": "No normalization, Hermitian projection or positivity clipping"
+  },
+  "python": "3.12.14",
+  "machine": "arm64",
+  "packages": {
+    "Pygments": "2.21.0",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.66.1",
+    "graphviz": "0.21",
+    "h5py": "3.16.0",
+    "iniconfig": "2.3.1",
+    "jax": "0.4.38",
+    "jaxlib": "0.4.38",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "ml_dtypes": "0.5.4",
+    "networkx": "3.7",
+    "numpy": "1.26.4",
+    "opt_einsum": "3.4.0",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "pip": "25.0.1",
+    "pluggy": "1.6.0",
+    "pyparsing": "3.3.3",
+    "pytest": "9.1.1",
+    "python-dateutil": "2.9.0.post0",
+    "qutip": "5.2.3",
+    "scipy": "1.15.3",
+    "six": "1.17.0",
+    "tensorcircuit": "0.12.0",
+    "tensornetwork-ng": "0.5.1"
+  },
+  "requirements_sha256": "0f0941c316e58d2cb648f4fe0a5939dfaf08bc6dbc5c472b1b71e7492d1047d0",
+  "source_sha256": {
+    "scripts/check_ansatz.py": "6f986de712a6ed960504079ce206117963bf1eab5f4c46ab469a31ac11aa8b32",
+    "src/yuan2019_fig5/ansatz.py": "cd1afcdb023de6ac8105f8f6e1e3ad445059becc6880e6d9c8a7ac707d1533c5",
+    "src/yuan2019_fig5/ansatz_validation.py": "7c516ea4770502a25acf0ee8a9a1f2df12f2f6b9976b3f3dd86807f23c9f877d",
+    "src/yuan2019_fig5/runtime.py": "d7b4053ffced1216562982c1bc3f4c567eeef340b8fc53de3b5a470d0bd0cb13",
+    "tests/test_ansatz.py": "3f65e9fa62df0d99ddeb90ac9fe5cb52f69965a7ef07d4df252d9b51c86ed440"
+  },
+  "installed_gates_source_sha256": "b18983a04efecf54525f038207bdc3c66d4e56d06a7fe788597b77ffbe4a121f",
+  "code_parent_commit": "41654c3e97054a8de025121fe3860f747f2076d4",
+  "random_seeds": {
+    "parameters": 2019,
+    "partial_trace_states": 2026
+  },
+  "checks": {
+    "gate_conventions": {
+      "angles_radians": [
+        0,
+        0.17,
+        -0.41,
+        0.73,
+        1.5707963267948966
+      ],
+      "max_absolute_errors": {
+        "rx": 1.1102230246251565e-16,
+        "crx": 1.1102230246251565e-16,
+        "rzz": 0.0,
+        "unitarity": 2.2205248956538115e-16,
+        "basis_action": 1.1102230246251565e-16,
+        "control_zero": 0.0
+      },
+      "absolute_tolerance": 1e-12,
+      "missing_factor_two_gap": 0.17766889843692082
+    },
+    "partial_trace_examples": {
+      "examples": 6,
+      "state_seed": 2026,
+      "full_matrix_max_absolute_error": 3.1031676915590914e-17,
+      "qutip_ptrace_max_absolute_error": 5.704641756960216e-17,
+      "analytic_max_absolute_error": 1.1102230246251565e-16,
+      "unnormalized_scaling_max_absolute_error": 0.0,
+      "absolute_tolerance": 1e-12
+    },
+    "ansatz_states": {
+      "cases": 17,
+      "parameter_seed": 2019,
+      "max_absolute_errors": {
+        "dense_state": 1.5700924586837752e-16,
+        "dense_density": 2.2247786310271853e-16,
+        "partial_trace": 1.1169266036727674e-16,
+        "state_norm": 6.661614839433911e-16,
+        "trace": 6.661338147750939e-16,
+        "hermiticity": 0.0
+      },
+      "minimum_eigenvalue": -1.6210787727072384e-17,
+      "absolute_tolerance": 1e-12,
+      "state_dtype": "complex128",
+      "density_dtype": "complex128",
+      "zero_state": "|++>_A tensor |00>_S",
+      "zero_system_density": "|00><00|"
+    },
+    "wire_mapping_and_jit": {
+      "wire_order": [
+        "a0",
+        "a1",
+        "s0",
+        "s1"
+      ],
+      "basis_wire_max_absolute_error": 0.0,
+      "system_z0_wire": 2,
+      "system_z1_wire": 3,
+      "z0_max_absolute_error": 0.0,
+      "z1_max_absolute_error": 0.0,
+      "jit_density_max_absolute_error": 0.0,
+      "devices": [
+        "TFRT_CPU_0"
+      ],
+      "absolute_tolerance": 1e-12,
+      "derivatives_computed": false
+    }
+  },
+  "artifacts": {
+    "samples": {
+      "path": "results/ansatz_20261014_152519_728727/ansatz_samples.npz",
+      "sha256": "566f0c129bada8c523ff9aa85626e09b9d54b90e9acb727c059e051eae09ac74",
+      "shapes": {
+        "theta": [
+          17,
+          6
+        ],
+        "psi": [
+          17,
+          16
+        ],
+        "rho": [
+          17,
+          4,
+          4
+        ]
+      },
+      "dtypes": {
+        "theta": "float64",
+        "psi": "complex128",
+        "rho": "complex128"
+      }
+    }
+  }
+}

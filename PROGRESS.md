@@ -1,6 +1,6 @@
 # Figure 5 reproduction progress
 
-日期：2026-10-13（Asia/Shanghai）。用户在 Phase 1 交付后明确要求实现 Exact 曲线；Phase 2 的 Exact 计算、验证与绘图已完成，停下等待下一步指示。
+日期：2026-10-14（Asia/Shanghai）。用户已确认 Exact 结果无误，并批准 Phase 3；Figure 4 线路、purification 与部分迹已完成并验证，停下等待验收与下一步选择。
 
 ## 完成与验证
 
@@ -36,15 +36,27 @@
 - 结果：Z0(0)=1；输出网格谷值约−0.120574982，位于t=1.57；Z0(10)≈0.122015654。
 - 原图蓝线提取940个矢量顶点，首点(t=0.01,Z0=1)。直接按图坐标最大差0.0110552；一个“1000样本覆盖0…10却显示于0.01…10”的采样解释将差降到1.790e-6。该解释是未确认的绘图假设，不是作者原始数据或源代码；交付数据未应用它。详细证据在论文记录和run_metadata.json，不能声称发表图已逐点完全重合。
 
+## Phase 3：Figure 4 线路与部分迹
+
+- 从干净且已验收的 Exact 提交 `41654c3` 创建本地 `phase3/ansatz`；之前的分支/提交保留。本阶段提交编号用 `git log -1 --oneline phase3/ansatz` 查询。
+- 重新目视核对论文 PDF/印刷第20页 Figure 4，核对已安装 TensorCircuit 0.12.0 的 RX、controlled 和 RZZ 源码；[来源及逐门约定](papers/figure4_ansatz_source_zh.md)区分原文定义和软件位序选择。
+- 新增 `ansatz.py`：位序(a0,a1,s0,s1)=(0,1,2,3)，六个实参数，严格门顺序，控制值1。RX/CRX调用两倍角度；RZZ调用两倍角度并显式half=True，不插入Hamiltonian的1/4。整体态/系统态均为complex128，保留JAX路径。
+- 部分迹用 `rho[s,t]=sum_a A[a,s]*conj(A[a,t])`；不归一化、不修复状态。零参数整体态是|++>_A|00>_S，系统态是|00><00|；最大纠缠例子的系统态I4/4也通过验证。
+- 17组参数（零、单参数、通用、种子2019随机）与独立16×16矩阵计算比较：最大态元素差1.570e-16、最大rho元素差2.225e-16，容差1e-12。门矩阵全列/控制0、完整密度矩阵块求和、6个部分迹例子（随机态种子2026）和QuTiP ptrace均通过。
+- 迹误差6.661e-16、厄米Frobenius误差0、最小计算特征值−1.621e-17（容差−1e-12）。位有效次序、Z0对应wire2、Z1对应wire3、前向JIT及CPU/64位精度通过；没有计算ansatz导数。
+- 最终17组验证参数、纯态及系统密度矩阵保存在 [results/ansatz_20261014_152519_728727](results/ansatz_20261014_152519_728727/)，附版本、容差、实际误差和代码/数据哈希；NPZ已读回逐元素检查。不是VQS时间序列，没有使用Exact数据拟合参数。
+- 从项目外实际运行合并测试：`16 passed in 2.63s`；`pip check`通过；未新增依赖。Exact核心代码、已验收结果和固定依赖均无改动。运行命令见README，[中文公式与代码说明](notes/ansatz_purification_zh.md)已完成。
+- 已把用户要求的“完成反馈提供2–3个简单下一步选项”写入本项目AGENTS.md，供后续阶段沿用。
+
 ## 边界与未开始工作
 
 - 没有 push 或 merge，也没有通过连接器上传本地文件。
 - /Users/ornfr/Desktop/bookandpaper 严格只读、处于 Git 根之外，未复制或链接进项目。
 - `.venv`、缓存、临时日志均在本子项目并由现有 `.gitignore` 排除；只跟踪本阶段必要代码、文档及小型验证记录。
-- 只实现 Exact 演化并按本次请求绘制其曲线；未实现 purification、部分迹、McLachlan 或 VQS 演化，未完成含变分点/误差插图的完整 Figure 5。
+- 已完成Exact曲线和Figure 4静态线路/部分迹；未实现ansatz密度矩阵Jacobian、McLachlan或VQS演化，未完成含变分点/误差插图的完整Figure 5。
 - 未运行上游完整测试套件、第二个全新环境重建或 GPU 检查。TensorCircuit 可提示缺少未使用的 Qiskit/Cirq/cloud/Optax；未为消除提示安装额外框架。环境依赖现有基础 Python 3.12 路径，迁移需重建并复验。
-- 当前停在 Phase 2 的 Exact 交付；不自动进入后续阶段。
+- 当前停在Phase 3交付；不自动进入Phase 4或后续阶段。
 
 ## 下一步
 
-等待用户对 Exact 曲线的反馈和下一步明确指示。后续 Figure 4 线路、purification、AD/McLachlan/VQS 均未获本次授权；本次不 push、不 merge。
+等待用户验收Phase 3并选择：A验收后执行Phase 4的密度矩阵自动微分与有限差分验证；B先解释purification/部分迹；C先逐段讲解代码。Phase 4及McLachlan/VQS均不自动开始；本次不push、不merge。

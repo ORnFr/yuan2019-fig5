@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-Phase 1 环境提交为 `d9d208d`。随后用户要求实现 Exact 曲线，当前阶段分支为 `phase2/exact`，从该环境提交继续开发。阶段提交后工作区应无待提交改动。main 仍跟踪 origin/main；规划、环境和 Exact 分支均只保存在本地，这是未 push 的正常状态。
+Phase 1 环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收。当前阶段分支为 `phase3/ansatz`，从该Exact提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。
 
 如需检查仓库范围：
 
@@ -53,4 +53,4 @@ git commit -m '<描述本阶段成果的提交说明>'
 
 ## 下一步
 
-审阅项目 PROGRESS.md、README 和 Exact 结果。Phase 2 的 Exact 演化、曲线及验证已完成，当前停下等待下一步指示。未实现 VQS，不自动进入后续阶段。未经单独批准不 push 或 merge。
+审阅项目PROGRESS.md、README和Phase 3线路/部分迹验证。当前停下等待用户验收和下一步选择。未实现ansatz Jacobian或VQS，不自动进入后续阶段。未经单独批准不push或merge。

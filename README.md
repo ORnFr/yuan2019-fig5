@@ -1,6 +1,6 @@
 # Yuan et al. (2019) Figure 5 reproduction
 
-Phase 2 (Exact evolution) is complete and awaiting user review. The latest user request authorized the Exact curve after Phase 1. No purification, McLachlan or VQS evolution modules have been implemented.
+Phase 3 (Figure 4 ansatz and system partial trace) is complete and awaiting user acceptance. The user has accepted the Exact result. No ansatz Jacobian, McLachlan or VQS time evolution has been implemented.
 
 Target: mixed-state variational quantum simulation of the two-qubit Lindblad model in Figure 5 of [Yuan et al. (2019)](https://quantum-journal.org/papers/q-2019-10-07-191/).
 
@@ -13,7 +13,32 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 2 uses local branch `phase2/exact`, based on Phase 1 commit `d9d208d`; the planning and environment branches are preserved. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 3 uses local branch `phase3/ansatz`, based on the accepted Exact commit `41654c3`; earlier branches are preserved. No push or merge has been performed.
+
+## Figure 4 ansatz and partial trace
+
+`src/yuan2019_fig5/ansatz.py` implements the six real paper parameters with wires `(a0,a1,s0,s1)=(0,1,2,3)`, starting at `|0000>`. It applies H on both ancillae, controlled RX from a0 to s0 and a1 to s1, RZZ on the system, independent RX gates on s0/s1, and the final RZZ. Controlled rotations activate on 1.
+
+Paper RX/RZZ gates are `exp(-i theta X)` / `exp(-i theta ZZ)`. Installed TensorCircuit 0.12.0 RX/CRX use half angles; RZZ is explicitly called with `half=True`. Each library angle is therefore `2*theta`. This was checked separately for all three gate types against SciPy matrix exponentials and every input basis column, including the control=0 case. The Hamiltonian's 1/4 coefficient is not inserted into these gates.
+
+The public functions are `build_ansatz(theta)`, `purification_state(theta)`, `reduce_system_density(state)` and `system_density(theta)`. Parameters have shape `(6,)`, states `(16,)`, and system densities `(4,4)`. Computational arrays remain in JAX float64/complex128. For the fixed basis, reshape psi to `A[a,s]` of shape `(4,4)` and compute `rho[s,t]=sum_a A[a,s]*conj(A[a,t])`. The function neither normalizes nor clips the result. Zero parameters give the full state `|++>_A tensor |00>_S` and system density `|00><00|`.
+
+Run the Phase 3 checks from any directory:
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/check_ansatz.py"
+```
+
+It writes a unique `results/ansatz_<timestamp>/` without overwriting prior results. The final verification run is [results/ansatz_20261014_152519_728727](results/ansatz_20261014_152519_728727/):
+
+- `ansatz_samples.npz`: `theta` float64 `(17,6)`, `psi` complex128 `(17,16)`, `rho` complex128 `(17,4,4)`; validation samples, not evolution data.
+- `run_metadata.json`: source/basis/gate conventions, versions, seeds, code/data hashes and measured errors.
+
+The 17 parameter cases include zero, each individual parameter, two generic cases (one maximally mixed reduced state) and eight random cases with seed 2019. Independent validation constructs 16x16 dense operators; partial trace is additionally checked by summing full-density blocks, six analytic/random examples, and QuTiP ptrace. State and density maximum absolute errors are `1.570e-16` and `2.225e-16`; tolerance is `1e-12`. Trace, Hermiticity, eigenvalues, bit significance, the Z0-to-wire2 mapping and forward-only JIT also passed. The combined suite passed **16 tests**; use the pytest command below.
+
+The existing Exact code/data and fixed requirements are unchanged, and `pip check` still passes. No ansatz derivatives were computed; preserving the JAX array path and checking forward JIT do not certify Phase 4 derivative correctness. Source/gate review: [paper notes](papers/figure4_ansatz_source_zh.md). Formula-to-code explanation: [Chinese learning notes](notes/ansatz_purification_zh.md). Stop here for user acceptance.
 
 ## Exact evolution: run and outputs
 
@@ -105,4 +130,4 @@ Set the local cache variables above before installation. `/etc/ssl/cert.pem` is 
 - `results/`: small tracked Phase 1 verification and dependency records.
 - `.venv/` and `work/`: ignored environment, caches and temporary logs; no literature.
 
-TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during Phase 1 checks. Those optional features are outside the selected JAX circuit/AD path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution and the Figure 4/VQS implementation remain outside the completed work. Stop after Exact and wait for the user's next instruction.
+TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the environment/ansatz checks. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution, the ansatz Jacobian and VQS evolution remain outside the completed work. Stop after Phase 3 and wait for the user's next instruction.
