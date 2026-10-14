@@ -1,0 +1,50 @@
+{
+  "exact_evolution.pdf": {
+    "pages": 1,
+    "embedded_images": 0,
+    "vector_drawing_operations": 200,
+    "form_xobject_draws": 0,
+    "time_label_found": true
+  },
+  "figure5_dt001.pdf": {
+    "pages": 1,
+    "embedded_images": 0,
+    "vector_drawing_operations": 441,
+    "form_xobject_draws": 68,
+    "time_label_found": true
+  },
+  "figure5_dt005.pdf": {
+    "pages": 1,
+    "embedded_images": 0,
+    "vector_drawing_operations": 439,
+    "form_xobject_draws": 2001,
+    "time_label_found": true
+  },
+  "figure5_step_comparison.pdf": {
+    "pages": 1,
+    "embedded_images": 0,
+    "vector_drawing_operations": 589,
+    "form_xobject_draws": 136,
+    "time_label_found": true
+  },
+  "exact_evolution.svg": {
+    "embedded_images": 0,
+    "vector_paths": 40,
+    "use_elements": 78
+  },
+  "figure5_dt001.svg": {
+    "embedded_images": 0,
+    "vector_paths": 59,
+    "use_elements": 252
+  },
+  "figure5_dt005.svg": {
+    "embedded_images": 0,
+    "vector_paths": 82,
+    "use_elements": 2191
+  },
+  "figure5_step_comparison.svg": {
+    "embedded_images": 0,
+    "vector_paths": 81,
+    "use_elements": 339
+  }
+}

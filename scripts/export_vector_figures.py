@@ -18,7 +18,7 @@ configure_project()
 import numpy as np
 import matplotlib.pyplot as plt
 from yuan2019_fig5.plot import load_trajectory, compare_trajectories, make_figure5, make_exact_figure
-from yuan2019_fig5.step_comparison import compare_step_sizes, make_step_comparison
+from yuan2019_fig5.step_comparison import compare_step_sizes, make_step_comparison, make_fine_step_figure
 from yuan2019_fig5.vector_output import save_vector_figure
 
 
@@ -42,13 +42,19 @@ def main():
     combined, metrics = compare_step_sizes(exact, coarse, exact_fine, fine)
     exact_figure = make_exact_figure(exact["t"], exact["z0"])
     coarse_figure = make_figure5(baseline, marker_stride=15)
-    fine_figure = make_figure5(new, marker_stride=30)
-    fine_figure.subplots_adjust(top=.91)
-    fine_figure.axes[0].set_title(r"VQS parameter Euler: $dt=0.005$", fontsize=11)
+    fine_figure = make_fine_step_figure(new)
+    fine_markers = fine_figure.axes[0].lines[1]
+    assert len(fine_markers.get_xdata()) == 2001
+    np.testing.assert_array_equal(fine_markers.get_xdata(), new["t"])
+    np.testing.assert_array_equal(fine_markers.get_ydata(), new["z0_vqs"])
     merged_figure = make_step_comparison(combined)
     axis = merged_figure.axes[0]
     assert len(axis.lines[1].get_xdata()) == len(axis.lines[2].get_xdata()) == 68
     np.testing.assert_array_equal(axis.lines[1].get_xdata(), axis.lines[2].get_xdata())
+    merged_fine_markers = axis.lines[2]
+    for getter in ("get_marker", "get_markersize", "get_markerfacecolor", "get_color",
+                   "get_markeredgewidth"):
+        assert getattr(fine_markers, getter)() == getattr(merged_fine_markers, getter)(), getter
     inset = axis.child_axes[0]
     np.testing.assert_array_equal(inset.lines[0].get_ydata(), combined["coarse_error"])
     np.testing.assert_array_equal(inset.lines[2].get_ydata(), combined["fine_error"])
@@ -71,7 +77,8 @@ def main():
         "formats": ["svg", "pdf"], "embedded_bitmap_conversion": False,
         "raster_images_allowed": False, "preserved_file_sha256": preserved,
         "metrics": metrics, "coarse_metrics": baseline_metrics, "fine_metrics": new_metrics,
-        "display": {"coarse_stride": 15, "fine_stride": 30, "markers_each": 68,
+        "display": {"coarse_stride": 15, "fine_stride": 1, "fine_markers": 2001,
+            "combined_fine_stride": 30, "combined_markers_each": 68,
             "physical_spacing": .15, "actual_computed_points": [1001, 2001],
             "error_thinning": False, "error_definition": "VQS - Exact"},
         "python": platform.python_version(), "packages": dict(sorted(

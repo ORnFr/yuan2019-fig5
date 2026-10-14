@@ -3,6 +3,15 @@
 import numpy as np
 from .plot import compare_trajectories, make_figure5
 
+FINE_VQS_MARKER_STYLE = {
+    "marker": "^",
+    "markersize": 4,
+    "markerfacecolor": "none",
+    "color": "#7851a9",
+    "markeredgewidth": .9,
+}
+FINE_VQS_LABEL = r"VQS, $dt=0.005$"
+
 
 def compare_step_sizes(exact_coarse, coarse, exact_fine, fine):
     r"""Return native-grid errors and differences on the common coarse grid.
@@ -49,8 +58,7 @@ def make_step_comparison(arrays):
     axis.lines[1].set_label(r"VQS, $dt=0.01$")
     indices = np.unique(np.r_[np.arange(0, len(arrays["fine_t"]), 30), len(arrays["fine_t"]) - 1])
     axis.plot(arrays["fine_t"][indices], arrays["fine_z0_vqs"][indices], linestyle="none",
-              marker="^", markersize=4, markerfacecolor="none", color="#7851a9",
-              markeredgewidth=.9, label=r"VQS, $dt=0.005$")
+              **FINE_VQS_MARKER_STYLE, label=FINE_VQS_LABEL)
     axis.legend(loc="lower right", framealpha=1, edgecolor="black", fancybox=False, fontsize=9)
     inset.lines[0].set(color="#f4ad00", linestyle="-.", label=r"$dt=0.01$")
     inset.plot(arrays["fine_t"], arrays["fine_error"], color="#7851a9", linestyle="--",
@@ -59,4 +67,20 @@ def make_step_comparison(arrays):
         np.max(abs(arrays["fine_error"]))) * 1.15 / .001) * .001))
     inset.set_ylim(-bound, bound)
     inset.legend(loc="upper right", fontsize=8, framealpha=1)
+    return figure
+
+
+def make_fine_step_figure(arrays):
+    """Plot every dt=.005 VQS sample with the marker style used in the overlay.
+
+    The standalone plot displays all 2001 saved VQS points. Each point uses
+    the same hollow purple triangle as the fine-step series in the combined
+    figure; no values are interpolated, shifted, or removed.
+    """
+    figure = make_figure5(arrays, marker_stride=1)
+    axis = figure.axes[0]
+    axis.lines[1].set(linestyle="none", **FINE_VQS_MARKER_STYLE, label=FINE_VQS_LABEL)
+    axis.set_title(r"VQS parameter Euler: $dt=0.005$", fontsize=11)
+    axis.legend(loc="lower right", framealpha=1, edgecolor="black", fancybox=False, fontsize=9)
+    figure.subplots_adjust(top=.91)
     return figure

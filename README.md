@@ -19,11 +19,15 @@ The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/
 
 ## Figure output format: SVG and PDF
 
-The user requested the original thinned-marker layout and vector output for every figure. All current plotting entry points now produce **SVG and PDF only**. The 68-marker-per-run comparison layout is restored; actual data still have 1001/2001 samples. All old data and historical PNG outputs remain unchanged, and no dynamics were rerun for this format change.
+All current plotting entry points produce **SVG and PDF only**. The standalone dt=.005 figure shows every one of its 2001 VQS samples as hollow purple triangles, matching the fine-step markers in the combined plot. The combined plot keeps 68 displayed markers per run for readability; its Exact curve and both error curves use all saved points. The saved trajectory arrays and historical outputs remain unchanged.
 
 ![Vector step-size overlay](results/vectors_20261014_183719_166716/figure5_step_comparison.svg)
 
-Verified vector editions are in [results/vectors_20261014_183719_166716](results/vectors_20261014_183719_166716/): `exact_evolution`, `figure5_dt001`, `figure5_dt005`, `figure5_step_comparison`, each as `.svg` and `.pdf`. They are redrawn from saved arrays, never PNGs inserted into PDF/SVG wrappers. SVG stores glyph outlines; PDF embeds TrueType fonts. Curves and markers remain vector objects at any zoom.
+The latest verified vector editions are in [results/vectors_20261014_185621_332187](results/vectors_20261014_185621_332187/): `exact_evolution`, `figure5_dt001`, `figure5_dt005`, `figure5_step_comparison`, each as `.svg` and `.pdf`. The standalone fine-step figure contains all 2001 hollow purple triangle markers; the combined overlay keeps its 68-marker-per-run layout. They are redrawn from saved arrays, never PNGs inserted into PDF/SVG wrappers. SVG stores glyph outlines; PDF embeds TrueType fonts. Curves and markers remain vector objects at any zoom.
+
+![Standalone dt=0.005 plot with all 2001 VQS samples](results/vectors_20261014_185621_332187/figure5_dt005.svg)
+
+![Combined step-size overlay](results/vectors_20261014_185621_332187/figure5_step_comparison.svg)
 
 To redraw these four existing results without recomputing dynamics:
 
@@ -33,7 +37,7 @@ PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
   "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/export_vector_figures.py"
 ```
 
-`save_vector_figure` rejects image artists and rasterized content, writes SVG/PDF without overwriting, and checks SVG for embedded images. Independent inspection of all four PDFs finds one page each, vector drawing operators, readable Time labels and **zero embedded images**; all four SVGs likewise contain paths and zero image elements. See `vector_checks.json`. All PDFs have also been rendered for visual review with no clipping or layout defects; those temporary review images stay in ignored `work/`. The suite passed **42 tests in 7.83s**, including vector-output/no-overwrite and raster rejection checks.
+`save_vector_figure` rejects image artists and rasterized content, writes SVG/PDF without overwriting, and checks SVG for embedded images. Independent inspection of all four PDFs finds one page each, vector drawing operations, readable Time labels and **zero embedded images**; all four SVGs likewise contain paths and zero image elements. The latest `vector_checks.json` also records 2191 SVG `<use>` elements in the dt=.005 plot, including 2001 plotted sample markers. All PDFs have been rendered for visual review; the temporary review images stay in ignored `work/`. The suite passed **42 tests in 7.83s** for the vector-export changes preceding this all-points display update.
 
 The sections below retain historical numerical evidence and filenames. Those old PNGs are archival results, not the output format of future runs. Existing `run_exact.py`, `plot_figure5.py`, and `run_step_comparison.py` commands now save `.svg`/`.pdf` instead. Vector preference is recorded in AGENTS.md; generated PDFs under `results/` are allowed by `.gitignore` without admitting outside literature.
 
@@ -56,7 +60,7 @@ This creates a unique `results/step_comparison_<timestamp>/`. The verified run i
 - `vqs_dt005.npz`: all 2001 states/parameters/observables and diagnostics, plus 2000 applied updates.
 - `exact_dt005.npz`: independently evaluated fine-grid t/rho/z0.
 - `comparison.npz`: native-grid `coarse_*` (1001 points), `fine_*` (2001 points), signed errors and `fine_minus_coarse_common` on the shared 1001 times.
-- `figure5_dt005.png`: the new result alone; `figure5_step_comparison.png`: both VQS curves and both signed-error curves overlaid. Both PNGs are 1680x1296 at 240 dpi.
+- Historical `figure5_dt005.png` and `figure5_step_comparison.png` preserve the earlier marker-thinned raster exports. Current figures are vector files in the latest `results/vectors_<timestamp>/` directory; its standalone dt=.005 curve contains all 2001 points.
 - `run_metadata.json`: unchanged physical/numerical choices, versions, code/data digests, actual checks and before/after hashes for all nine preserved old artifacts.
 
 | VQS parameter step | Native-grid maximum Z0 error | Time | RMS error |
@@ -64,7 +68,7 @@ This creates a unique `results/step_comparison_<timestamp>/`. The verified run i
 | .01 (preserved) | .00755848956718 | 2.56 | .00336303618991 |
 | .005 (new) | .00567492350223 | 2.48 | .00262363430997 |
 
-The maximum error decreases by 24.92%; the largest new/old Z0 difference on common times is .00238556581934 at t=2.89. Both error curves use `VQS - Exact` with every native-grid point. Display markers share .15 physical spacing (old stride15, new stride30). There is no time shift or interpolation, and no reassignment of the baseline.
+The maximum error decreases by 24.92%; the largest new/old Z0 difference on common times is .00238556581934 at t=2.89. Both error curves use `VQS - Exact` with every native-grid point. The combined plot displays 68 markers per VQS run at .15 physical spacing (old stride15, new stride30); the standalone dt=.005 vector figure displays all 2001 samples with the combined plot's hollow purple triangle style. There is no time shift or interpolation, and no reassignment of the baseline.
 
 All fine VQS states pass physical checks (trace error 9.992e-16, Hermiticity error zero, minimum eigenvalue zero; tolerance1e-10), parameter/time alignment and independent density reconstruction (tolerance1e-12). New Exact states agree with independent matrix-exponential propagation to 2.942e-15 and with old Exact states at common times to 1.055e-15 (reference tolerance1e-9). All NPZ arrays were read back; both PNGs were visually checked. The suite passed **39 tests in 7.98s** from outside the project. The scientific dependencies and evolution core code are unchanged.
 

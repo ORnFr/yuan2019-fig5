@@ -4,7 +4,7 @@ Read the parent workspace instructions and docs/Codex_Master_Prompt.md before wo
 
 Explicit user requirements override generic parent defaults for this project:
 - English function names, comments, Docstrings and README; separate Chinese learning documentation.
-- Export every new figure as genuine SVG and PDF vector graphics; do not embed PNGs or rasterize artists. Retain historical outputs without overwriting. Preserve the approved thinned-marker layout for step-size overlays unless the user requests otherwise.
+- Export every new figure as genuine SVG and PDF vector graphics; do not embed PNGs or rasterize artists. Retain historical outputs without overwriting. The standalone dt=.005 figure displays all 2001 samples with the same hollow purple triangles as the combined overlay; the combined overlay keeps its approved thinned-marker layout.
 - All project files and progress records stay within this independent subproject.
 - Only the approved phase may be implemented; stop for user acceptance at every phase boundary.
 - Completion feedback should include two or three simple, labeled next-step options; wait for the user's choice before starting another phase.

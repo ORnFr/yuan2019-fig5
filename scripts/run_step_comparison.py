@@ -23,8 +23,8 @@ from yuan2019_fig5.mclachlan_validation import audit_trajectory
 from yuan2019_fig5.model import build_model
 from yuan2019_fig5.exact import solve_lindblad, observable_values, density_diagnostics, SOLVER_OPTIONS
 from yuan2019_fig5.validation import reference_liouvillian
-from yuan2019_fig5.plot import load_trajectory, compare_trajectories, make_figure5
-from yuan2019_fig5.step_comparison import compare_step_sizes, make_step_comparison
+from yuan2019_fig5.plot import load_trajectory, compare_trajectories
+from yuan2019_fig5.step_comparison import compare_step_sizes, make_step_comparison, make_fine_step_figure
 from yuan2019_fig5.vector_output import save_vector_figure
 
 
@@ -85,9 +85,8 @@ def main():
     _, fine_file_checks = load_trajectory(output / "vqs_dt005.npz", variational=True, dt=.005)
     _, exact_file_checks = load_trajectory(output / "exact_dt005.npz", dt=.005)
     fine_comparison, _ = compare_trajectories(exact_fine, fine)
-    new_figure = make_figure5(fine_comparison, marker_stride=30)
-    new_figure.subplots_adjust(top=.91)
-    new_figure.axes[0].set_title(r"VQS parameter Euler: $dt=0.005$", fontsize=11)
+    new_figure = make_fine_step_figure(fine_comparison)
+    assert len(new_figure.axes[0].lines[1].get_xdata()) == len(times) == 2001
     merged_figure = make_step_comparison(comparisons)
     for name, figure in (("figure5_dt005", new_figure), ("figure5_step_comparison", merged_figure)):
         paths = save_vector_figure(figure, output / name)
@@ -116,7 +115,9 @@ def main():
         "vqs_exact_data_read": False, "vqs_trajectory_checks": vqs_checks,
         "saved_file_checks": {"vqs": fine_file_checks, "exact": exact_file_checks},
         "metrics": metrics, "preserved_file_sha256": preserved,
-        "display": {"coarse_stride": 15, "fine_stride": 30, "physical_marker_spacing": .15,
+        "display": {"coarse_stride": 15, "fine_stride": 1, "fine_marker_count": 2001,
+            "combined_fine_stride": 30, "combined_fine_marker_count": 68,
+            "physical_marker_spacing": .15,
             "include_endpoints": True, "error_definition": "VQS - Exact", "error_thinning": False,
             "formats": ["svg", "pdf"], "interpolation": False, "time_shift": False},
         "python": platform.python_version(), "machine": platform.machine(),
