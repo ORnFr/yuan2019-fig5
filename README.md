@@ -1,6 +1,6 @@
 # Yuan et al. (2019) Figure 5 reproduction
 
-Phase 5 (McLachlan equations, SVD solve and parameter Forward Euler) is complete and awaiting user acceptance. The fixed baseline has run through t=10. The Figure 5 comparison and plot remain for separately approved Phase 6.
+Phase 6 is complete and awaiting user acceptance. The Figure 5 comparison has been generated from the accepted Exact/VQS baselines. Maximum absolute Z0 error across all 1001 saved points is **0.0075584896**, below the 0.01 comparison target. This does not establish pointwise agreement with the author's unavailable raw arrays or continuous-time/full-state accuracy.
 
 Target: mixed-state variational quantum simulation of the two-qubit Lindblad model in Figure 5 of [Yuan et al. (2019)](https://quantum-journal.org/papers/q-2019-10-07-191/).
 
@@ -13,7 +13,42 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 5 uses local branch `phase5/vqs`, based on derivative commit `cd327b6`; earlier branches are preserved. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 6 uses local branch `phase6/figure5`, based on VQS commit `3136aeb`; earlier branches are preserved. No push or merge has been performed.
+
+## Figure 5: compare saved baselines
+
+![Figure 5 comparison](results/figure5_20261014_162632_671057/figure5.png)
+
+Run from any directory; no activation, dependency installation or dynamics rerun is required:
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/plot_figure5.py"
+```
+
+Defaults explicitly select the accepted `results/exact_20261013_220047_446893/exact.npz` and `results/vqs_20261014_161232_948193/vqs.npz`; this does not select whichever run happens to be newest. To compare other recorded baselines, pass `--exact results/<exact_run>/exact.npz --vqs results/<vqs_run>/vqs.npz`. Relative paths are interpreted from the project root. Inputs must be within project `results/`, match their metadata hashes and have the same 1001-point baseline grid, model and basis. The script checks stored Z0 against density diagonals and all states' physical validity before comparing. It imports NumPy/Matplotlib, with no QuTiP/JAX/TensorCircuit import or evolution-module dependency.
+
+Each invocation writes a unique `results/figure5_<timestamp>/`. The verified run is [results/figure5_20261014_162632_671057](results/figure5_20261014_162632_671057/):
+
+- `figure5.png`: 1680x1296 at 240 dpi. Main panel: Exact line and VQS dots; inset: **signed** `error=z0_vqs-z0_exact`. All input times are unchanged.
+- `comparison.npz`: float64 `t,z0_exact,z0_vqs,error`, each `(1001,)`, read back and checked element by element. The original rho/parameter data stay in their accepted run folders.
+- `run_metadata.json`: input/output/source digests, source paper/pages, inherited model/solver/SVD choices, actual validation and full-grid error metrics, Python and installed versions.
+
+All 1001 points determine the error metrics and inset. Only displayed VQS dots are thinned to every 15 samples, including the first/last points (68 markers). Main limits follow Figure 5: t=[0,10], Z0=[-.2,1]. The inset accommodates the full error range rather than clipping peaks to the published axis limits.
+
+| Metric | Actual result |
+| --- | --- |
+| Maximum absolute signed difference | 0.0075584895671799435 |
+| Location | index 256, t=2.56; signed error positive |
+| Minimum signed difference | -0.006860966610591379 |
+| RMS over all saved points | 0.003363036189909212 |
+| Final signed difference | -0.0001371874208003776 |
+| Strict sampled target `<0.01` | Met |
+
+Independent trace loops verify both saved observables and the full error vector. Tests also cover a peak skipped by displayed markers, strict target boundary, wrong time alignment, corrupted observables/states and lower precision. The combined suite passed **36 tests in 7.97s**, run from outside the project; the PNG has been visually checked. Previously accepted dynamics and input files remain unchanged.
+
+This reproduces the prescribed observable comparison and meets the stated deviation-scale target on the saved grid. Author raw VQS data and an explicit published inset subtraction order are unavailable; no pointwise paper-error-curve identity is claimed. The previously documented published Exact-line time-coordinate discrepancy is not corrected in this plot. Full-time convergence and separation of representation/discretization errors remain unperformed. See [Chinese reading/code guide](notes/figure5_comparison_zh.md) and [source review](papers/figure5_comparison_source_zh.md). Phase 6 is the final planned phase; stop for acceptance.
 
 ## VQS baseline: run and outputs
 
@@ -43,7 +78,7 @@ The full baseline has trace error `1.110e-15`, Hermiticity error zero, minimum d
 
 Maximum linear residual is `5.759e-15`, while maximum density-tangent residual is `0.0315028`: solving the normal equation accurately does not eliminate the ansatz representation error. Over t<=.2, increasing cutoff tenfold/hundredfold changes neither rank nor trajectory. On that short interval, successive dt=.01/.005 and .005/.0025 observable differences are `1.619e-4` and `8.365e-5`. These are short-time observations, not full-time convergence or threshold-insensitivity claims. No Exact/VQS error comparison or Figure 5 plot has been performed in Phase 5.
 
-See [Chinese formulas and code explanation](notes/mclachlan_vqs_zh.md). Stop after Phase 5 for user acceptance; Phase 6 requires the user's next instruction.
+See [Chinese formulas and code explanation](notes/mclachlan_vqs_zh.md). Phase 5 was accepted before the separately authorized Phase 6 comparison above.
 
 ## Reduced-density Jacobian
 
@@ -180,9 +215,10 @@ Set the local cache variables above before installation. `/etc/ssl/cert.pem` is 
 - `tests/`: independent environment, Exact, ansatz, derivative and McLachlan/Euler numerical checks.
 - `src/yuan2019_fig5/`: separate Exact, circuit, derivative and VQS modules with validation references.
 - `scripts/run_vqs.py`: independently validated Phase 5 baseline entry point.
+- `scripts/plot_figure5.py`: reads recorded Exact/VQS baselines and compares/plots them independently.
 - `requirements.txt`: the single pinned installation specification.
 - `docs/`: approved master plan, setup guide, environment rationale and Chinese learning notes.
 - `results/`: tracked verification records and small Exact/VQS data; existing results are preserved.
 - `.venv/` and `work/`: ignored environment, caches and temporary logs; no literature.
 
-TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the JAX checks and VQS run. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution, full-time convergence studies and the Figure 5 comparison/plot remain outside the completed work. Stop after Phase 5 and wait for the user's next instruction.
+TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the JAX checks and VQS run. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import JAX/TensorCircuit; the plot entry point imports none of these evolution frameworks. Full upstream suites, GPU execution and full-time convergence studies remain outside the completed work. Stop after Phase 6 and wait for the user's acceptance or next instruction.

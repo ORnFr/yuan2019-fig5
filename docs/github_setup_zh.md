@@ -11,7 +11,7 @@
 - 本地 main 跟踪 origin/main；两者以远程初始 README 提交 `e7927b483d7d83b0e67a86df16ab009e89eadb97` 为共同基线。
 - 规划分支：`phase0/planning`；规划文档提交只保存在本地。
 - 经用户确认，仓库内作者为 `ORnFr <307864480+ORnFr@users.noreply.github.com>`；没有更改全局 Git 身份。
-- 没有 push、merge 或上传本地文件。GitHub 页面目前仍只有初始 README，这是正常状态。
+- 没有 push、merge 或上传本地文件。此前确认远程仅含初始README；本阶段未重新联网查询远程页面，全部阶段成果仍只保存在本地。
 
 ## 查看当前状态
 
@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`，Phase 4 Jacobian提交为 `cd327b6`。用户随后批准Phase 5，当前分支为 `phase5/vqs`，从Jacobian提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。当前阶段哈希用 `git log -1 --oneline phase5/vqs` 查询。
+Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`，Phase 4 Jacobian提交为 `cd327b6`，Phase 5 VQS提交为 `3136aeb`。用户以“A”验收Phase 5并批准Phase 6，当前分支为 `phase6/figure5`，从VQS提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。当前阶段哈希用 `git log -1 --oneline phase6/figure5` 查询。
 
 如需检查仓库范围：
 
@@ -53,4 +53,4 @@ git commit -m '<描述本阶段成果的提交说明>'
 
 ## 下一步
 
-审阅项目PROGRESS.md、README和Phase 5的McLachlan/SVD及VQS基线验证。当前停下等待用户验收和下一步选择。未开始Phase 6比较/绘图，不自动进入后续阶段。未经单独批准不push或merge。
+审阅项目PROGRESS.md、README与Phase 6 Figure 5/全点比较：最大Z0差0.00755849<.01。当前停下等待最终验收和下一步选择，未自动开展额外收敛研究。验收不隐含上传授权；未经单独批准不push或merge。
