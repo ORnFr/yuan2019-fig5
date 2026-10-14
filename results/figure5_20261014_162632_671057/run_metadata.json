@@ -1,0 +1,190 @@
+{
+  "status": "Phase 6 comparison completed",
+  "timestamp": "2026-10-14T16:26:32.825260+08:00",
+  "command": "\"$FIG5_ROOT/.venv/bin/python\" \"$FIG5_ROOT/scripts/plot_figure5.py\"",
+  "inputs": {
+    "exact": {
+      "path": "results/exact_20261013_220047_446893/exact.npz",
+      "sha256": "8f7efda0df30bc3647614de2420850c705c625ecf35408fda06bc2b3a49c37f2",
+      "metadata_path": "results/exact_20261013_220047_446893/run_metadata.json",
+      "metadata_sha256": "daf3c48cc53c652c9cbcde679d95e02a05e90128c701fb361311b548f668fb38"
+    },
+    "vqs": {
+      "path": "results/vqs_20261014_161232_948193/vqs.npz",
+      "sha256": "9e14bc5ce7355ab67c9aeba277a41ebd6905c7c01435e518dcbfdb27707dc1c3",
+      "metadata_path": "results/vqs_20261014_161232_948193/run_metadata.json",
+      "metadata_sha256": "ce5003983f0943815d8c908d4a45aaa3db62da71140273b57ac207a04aabe281"
+    }
+  },
+  "model": {
+    "H": "X tensor I + I tensor X + 0.25 Z tensor Z",
+    "collapse": [
+      "|0><1| tensor I",
+      "I tensor |0><1|"
+    ],
+    "gamma": [
+      1,
+      1
+    ],
+    "initial_density": "|00><00|",
+    "observable": "Z tensor I",
+    "basis": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ],
+    "hbar": 1,
+    "units": "Dimensionless time; transverse-field coefficient=1"
+  },
+  "exact_solver_options": {
+    "method": "dop853",
+    "atol": 1e-12,
+    "rtol": 1e-10,
+    "nsteps": 2500,
+    "normalize_output": false,
+    "store_states": true,
+    "progress_bar": ""
+  },
+  "vqs_integrator": {
+    "method": "Forward Euler on parameters",
+    "dt": 0.01,
+    "stop": 10.0,
+    "points": 1001,
+    "initial_theta": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "first_step_special_handling": false
+  },
+  "vqs_svd": {
+    "cutoff": "6 * eps(float64) * s_max",
+    "multiplier": 1,
+    "retained": "s > cutoff",
+    "method": "truncated minimum-norm least squares",
+    "full_condition": "Infinity when numerical rank<6; NPZ infinity is intentional",
+    "retained_condition": "s_max / smallest retained singular value"
+  },
+  "source_pdf": {
+    "title": "Theory of variational quantum simulation",
+    "year": 2019,
+    "journal_url": "https://quantum-journal.org/papers/q-2019-10-07-191/",
+    "local_pdf_sha256": "e142a56c57c822a45fb22aea7e7b9a47f694a9c37842796a040c9f8d4c2053b7",
+    "pages": {
+      "equations_28_29": 11,
+      "figure4_equation62": 20,
+      "figure5": 21
+    },
+    "version": "Local 41-page journal-formatted PDF; accepted footer 2019-09-07"
+  },
+  "input_checks": {
+    "exact": {
+      "trace_max_absolute_error": 1.110229092429668e-15,
+      "hermiticity_max_frobenius_error": 4.169838857687102e-16,
+      "minimum_density_eigenvalue": 0.0,
+      "saved_z0_max_absolute_error": 0.0,
+      "physical_tolerance": 1e-10,
+      "observable_tolerance": 1e-12
+    },
+    "vqs": {
+      "trace_max_absolute_error": 1.1102230246251565e-15,
+      "hermiticity_max_frobenius_error": 0.0,
+      "minimum_density_eigenvalue": 0.0,
+      "saved_z0_max_absolute_error": 1.1102230246251565e-16,
+      "physical_tolerance": 1e-10,
+      "observable_tolerance": 1e-12
+    }
+  },
+  "metrics": {
+    "points": 1001,
+    "error_definition": "z0_vqs - z0_exact",
+    "max_absolute_error": 0.0075584895671799435,
+    "max_error_index": 256,
+    "time_at_max_absolute_error": 2.56,
+    "signed_error_at_max_absolute_error": 0.0075584895671799435,
+    "minimum_signed_error": -0.006860966610591379,
+    "maximum_signed_error": 0.0075584895671799435,
+    "rms_error": 0.003363036189909212,
+    "final_signed_error": -0.0001371874208003776,
+    "comparison_target": 0.01,
+    "strict_target_met": true
+  },
+  "display": {
+    "marker_stride": 15,
+    "include_first_last_marker": true,
+    "main_time_range": [
+      0,
+      10
+    ],
+    "main_z0_range": [
+      -0.2,
+      1
+    ],
+    "error_inset": "All 1001 signed differences; symmetric range accommodates actual data",
+    "png_dpi": 240,
+    "time_shift": false,
+    "interpolation": false,
+    "fitting": false
+  },
+  "dynamics_rerun": false,
+  "evolution_frameworks_imported": false,
+  "python": "3.12.14",
+  "machine": "arm64",
+  "packages": {
+    "Pygments": "2.21.0",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.66.1",
+    "graphviz": "0.21",
+    "h5py": "3.16.0",
+    "iniconfig": "2.3.1",
+    "jax": "0.4.38",
+    "jaxlib": "0.4.38",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "ml_dtypes": "0.5.4",
+    "networkx": "3.7",
+    "numpy": "1.26.4",
+    "opt_einsum": "3.4.0",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "pip": "25.0.1",
+    "pluggy": "1.6.0",
+    "pyparsing": "3.3.3",
+    "pytest": "9.1.1",
+    "python-dateutil": "2.9.0.post0",
+    "qutip": "5.2.3",
+    "scipy": "1.15.3",
+    "six": "1.17.0",
+    "tensorcircuit": "0.12.0",
+    "tensornetwork-ng": "0.5.1"
+  },
+  "requirements_sha256": "0f0941c316e58d2cb648f4fe0a5939dfaf08bc6dbc5c472b1b71e7492d1047d0",
+  "source_sha256": {
+    "scripts/plot_figure5.py": "1eacf7ea8e81d029bb2870419a45db9abd572c18ffd4a3c20fdf7917f4a46de5",
+    "src/yuan2019_fig5/plot.py": "3a15e14cc5f6db1c6c0098a8053509f5d46f65465256e0b1f026125a75d97d2e",
+    "src/yuan2019_fig5/runtime.py": "d7b4053ffced1216562982c1bc3f4c567eeef340b8fc53de3b5a470d0bd0cb13",
+    "tests/test_plot.py": "4606f0a3b7a63c08524114b222799a0f9d32d550df61d9472c6ace7a9c182921"
+  },
+  "code_parent_commit": "3136aebca5ed52ff480940c30033a8aaa7ad4dc1",
+  "artifacts": {
+    "comparison.npz": {
+      "path": "results/figure5_20261014_162632_671057/comparison.npz",
+      "sha256": "ce3a0e2e31365bdcd930e2502683eb40fcc86b88d05929dd4b781acc4fb966c1"
+    },
+    "figure5.png": {
+      "path": "results/figure5_20261014_162632_671057/figure5.png",
+      "sha256": "afdafbdc27f40629802d45b9c93a654191dffa2ead3d08b102e2002a1e4e4939"
+    }
+  },
+  "limitations": [
+    "Error target verified on the 1001 saved samples, not all continuous times",
+    "No full-time step convergence or full-state error claim",
+    "Author raw VQS arrays and explicit inset sign convention unavailable; no pointwise paper-error-curve equivalence claim",
+    "Published Exact line time-coordinate discrepancy remains documented separately; no correction applied"
+  ]
+}

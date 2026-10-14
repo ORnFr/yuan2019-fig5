@@ -1,0 +1,172 @@
+{
+  "status": "passed",
+  "scope": "Phase 2: Exact only; no VQS or error inset",
+  "timestamp": "2026-10-13T22:00:47.802824+08:00",
+  "command": "\"$FIG5_ROOT/.venv/bin/python\" \"$FIG5_ROOT/scripts/run_exact.py\"",
+  "source": {
+    "doi": "10.22331/q-2019-10-07-191",
+    "model_location": "Section 6.3, Eq. (62), printed/PDF page 20",
+    "figure_location": "Figure 5, printed/PDF page 21"
+  },
+  "model": {
+    "H": "X tensor I + I tensor X + 0.25 Z tensor Z",
+    "collapse": [
+      "|0><1| tensor I",
+      "I tensor |0><1|"
+    ],
+    "gamma": [
+      1,
+      1
+    ],
+    "initial_density": "|00><00|",
+    "observable": "Z tensor I",
+    "basis": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ],
+    "hbar": 1,
+    "units": "Dimensionless time; transverse-field coefficient=1"
+  },
+  "grid": {
+    "dt_output": 0.01,
+    "points": 1001,
+    "t_start": 0,
+    "t_stop": 10,
+    "internal_steps": "Adaptive DOP853, not Euler"
+  },
+  "solver_options": {
+    "method": "dop853",
+    "atol": 1e-12,
+    "rtol": 1e-10,
+    "nsteps": 2500,
+    "normalize_output": false,
+    "store_states": true,
+    "progress_bar": ""
+  },
+  "dtypes": {
+    "t": "float64",
+    "rho": "complex128",
+    "z0": "float64"
+  },
+  "python": "3.12.14",
+  "machine": "arm64",
+  "packages": {
+    "Pygments": "2.21.0",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.66.1",
+    "graphviz": "0.21",
+    "h5py": "3.16.0",
+    "iniconfig": "2.3.1",
+    "jax": "0.4.38",
+    "jaxlib": "0.4.38",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "ml_dtypes": "0.5.4",
+    "networkx": "3.7",
+    "numpy": "1.26.4",
+    "opt_einsum": "3.4.0",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "pip": "25.0.1",
+    "pluggy": "1.6.0",
+    "pyparsing": "3.3.3",
+    "pytest": "9.1.1",
+    "python-dateutil": "2.9.0.post0",
+    "qutip": "5.2.3",
+    "scipy": "1.15.3",
+    "six": "1.17.0",
+    "tensorcircuit": "0.12.0",
+    "tensornetwork-ng": "0.5.1"
+  },
+  "requirements_sha256": "0f0941c316e58d2cb648f4fe0a5939dfaf08bc6dbc5c472b1b71e7492d1047d0",
+  "source_sha256": {
+    "scripts/run_exact.py": "d648b7a8e9395622a5970cd33755417549f175e9515c46120ee6925d37442cd5",
+    "src/yuan2019_fig5/__init__.py": "bd40493d430af72c7a45db474d7e11d9fb4038b70e23c0f70d8cfe6811ac4417",
+    "src/yuan2019_fig5/exact.py": "de4f8699c9c0ec68f6480fdd337868ba12ecf23730f470e790753c2b35186439",
+    "src/yuan2019_fig5/model.py": "edddbb1754ea507c38cdaf575f2e9147b3ef304b0a14b0b4a126effc3a9cab9c",
+    "src/yuan2019_fig5/runtime.py": "d7b4053ffced1216562982c1bc3f4c567eeef340b8fc53de3b5a470d0bd0cb13",
+    "src/yuan2019_fig5/validation.py": "ba7f1c553e43bd7083366fb4bb3d75d49dfa46882aa81dd824f18ff987949806"
+  },
+  "code_parent_commit": "d9d208d8588e4de6fddc541f1e25ea871e054a16",
+  "random_seed": 2019,
+  "randomness": "Only the generator's test density uses RNG; evolution is deterministic.",
+  "checks": {
+    "model_and_generator": {
+      "generator_max_absolute_error": 0.0,
+      "generator_trace_preservation_error": 0.0,
+      "derivative_hermiticity_frobenius_error": 1.5014717773534055e-16,
+      "absolute_tolerance": 1e-14,
+      "random_seed": 2019
+    },
+    "analytic_damping": {
+      "time_range": [
+        0,
+        3
+      ],
+      "points": 61,
+      "gamma": 1,
+      "population_max_absolute_error": 2.220446049250313e-16,
+      "z_max_absolute_error": 3.3306690738754696e-16,
+      "absolute_tolerance": 1e-09
+    },
+    "full_evolution": {
+      "exponential_rho_max_absolute_error": 2.843973196550426e-15,
+      "exponential_z0_max_absolute_error": 2.275957200481571e-15,
+      "tighter_rho_max_absolute_difference": 0.0,
+      "tighter_z0_max_absolute_difference": 0.0,
+      "comparison_absolute_tolerance": 1e-09,
+      "physical_absolute_tolerance": 1e-10,
+      "tighter_atol": 1e-14,
+      "tighter_rtol": 1e-12,
+      "density_diagnostics": {
+        "max_trace_error": 1.110229092429668e-15,
+        "max_hermiticity_frobenius_error": 4.169838857687102e-16,
+        "minimum_eigenvalue": 0.0,
+        "all_finite": true
+      }
+    }
+  },
+  "published_line_comparison": {
+    "reference_file": "papers/figure5_exact_reference.json",
+    "reference_sha256": "a1a197324b93fc54337ae77eeb51c65811f8b045efa1efdfeb4abf64d6b778f7",
+    "vertices": 940,
+    "first_vertex": [
+      0.01,
+      1.0
+    ],
+    "comparisons": {
+      "direct_published_coordinates": {
+        "max_absolute_difference": 0.011055198990139958,
+        "rms_difference": 0.002900045299642943
+      },
+      "one_output_interval_earlier": {
+        "max_absolute_difference": 0.0008709659381767321,
+        "rms_difference": 0.0003070102171136438
+      },
+      "hypothesis_1000_samples_across_0_to_10": {
+        "max_absolute_difference": 1.790377870611315e-06,
+        "rms_difference": 1.0148456543590459e-06
+      }
+    },
+    "interpretation": "Time mapping hypothesis explains the plotted line, but author raw data/code are unavailable. Saved Exact data remain on t_n=0.01*n including t=0."
+  },
+  "summary": {
+    "z0_initial": 1.0,
+    "z0_minimum": -0.12057498197025562,
+    "t_at_grid_minimum": 1.57,
+    "z0_at_t10": 0.12201565370043238
+  },
+  "artifacts": {
+    "data": {
+      "path": "results/exact_20261013_220047_446893/exact.npz",
+      "sha256": "8f7efda0df30bc3647614de2420850c705c625ecf35408fda06bc2b3a49c37f2"
+    },
+    "figure": {
+      "path": "results/exact_20261013_220047_446893/exact_evolution.png",
+      "sha256": "f7b575811931f1e98256e6dc172c3bb9c7268c2ad3e088ea4377ef766050e3f0"
+    }
+  }
+}

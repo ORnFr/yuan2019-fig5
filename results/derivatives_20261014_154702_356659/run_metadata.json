@@ -1,0 +1,225 @@
+{
+  "status": "passed",
+  "scope": "Phase 4 reduced-density Jacobian only; no M, V, linear solve or time step",
+  "timestamp": "2026-10-14T15:47:02.367332+08:00",
+  "command": "\"$FIG5_ROOT/.venv/bin/python\" \"$FIG5_ROOT/scripts/check_derivatives.py\"",
+  "definition": "D[i,s,t]=partial rho_S[s,t] / partial theta_i; real paper parameters",
+  "units": "Dimensionless angles in radians; density and derivatives dimensionless; no physical time",
+  "basis": {
+    "wires": [
+      "a0",
+      "a1",
+      "s0",
+      "s1"
+    ],
+    "system": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ]
+  },
+  "ad_method": "jax.jacfwd separately on real/imag rho; combine and move final parameter axis to first",
+  "holomorphic": false,
+  "parameter_shape": [
+    6
+  ],
+  "jacobian_shape": [
+    6,
+    4,
+    4
+  ],
+  "references": [
+    "Independent NumPy/SciPy full-gate product rule and explicit full-density partial trace",
+    "Analytic zero-point commutators",
+    "Central parameter differences at four recorded steps"
+  ],
+  "postprocessing": "No normalization, symmetrization, trace correction, eigenvalue clipping or initial parameter perturbation",
+  "python": "3.12.14",
+  "machine": "arm64",
+  "packages": {
+    "Pygments": "2.21.0",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.66.1",
+    "graphviz": "0.21",
+    "h5py": "3.16.0",
+    "iniconfig": "2.3.1",
+    "jax": "0.4.38",
+    "jaxlib": "0.4.38",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "ml_dtypes": "0.5.4",
+    "networkx": "3.7",
+    "numpy": "1.26.4",
+    "opt_einsum": "3.4.0",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "pip": "25.0.1",
+    "pluggy": "1.6.0",
+    "pyparsing": "3.3.3",
+    "pytest": "9.1.1",
+    "python-dateutil": "2.9.0.post0",
+    "qutip": "5.2.3",
+    "scipy": "1.15.3",
+    "six": "1.17.0",
+    "tensorcircuit": "0.12.0",
+    "tensornetwork-ng": "0.5.1"
+  },
+  "requirements_sha256": "0f0941c316e58d2cb648f4fe0a5939dfaf08bc6dbc5c472b1b71e7492d1047d0",
+  "source_sha256": {
+    "scripts/check_derivatives.py": "34ed024538b54134813d29bde3310caaf8711260d49f8e9f86fabdf1ab684eb2",
+    "src/yuan2019_fig5/derivatives.py": "8d882b1e2129a95541144cd72b8a4307d7768908d11421ad86a9a8916196a561",
+    "src/yuan2019_fig5/derivatives_validation.py": "5ef8aeb0b2e112033a7a6b6f3a91ef6c3c8644ed23562b14d950548bb37cb11e",
+    "src/yuan2019_fig5/ansatz.py": "cd1afcdb023de6ac8105f8f6e1e3ad445059becc6880e6d9c8a7ac707d1533c5",
+    "src/yuan2019_fig5/ansatz_validation.py": "7c516ea4770502a25acf0ee8a9a1f2df12f2f6b9976b3f3dd86807f23c9f877d",
+    "src/yuan2019_fig5/runtime.py": "d7b4053ffced1216562982c1bc3f4c567eeef340b8fc53de3b5a470d0bd0cb13",
+    "tests/test_derivatives.py": "5cffdf9f8ecd754967f86dca38f14572defdffa5ca393043b4fdff3f5c95da28"
+  },
+  "code_parent_commit": "3573a982accb7c8d65e73a48bea83292dc559bd2",
+  "random_seed": 2019,
+  "randomness": "Only eight validation parameter vectors; no stochastic evolution",
+  "checks": {
+    "zero_parameter": {
+      "max_absolute_error": 4.440892098500626e-16,
+      "absolute_tolerance": 1e-12,
+      "derivative_frobenius_norms": [
+        0.7071067811865472,
+        0.7071067811865472,
+        0.0,
+        1.4142135623730945,
+        1.4142135623730945,
+        0.0
+      ],
+      "relations_frobenius_errors": {
+        "D2_zero": 0.0,
+        "D5_zero": 0.0,
+        "D3_minus_2D0": 0.0,
+        "D4_minus_2D1": 0.0
+      },
+      "interpretation": "Two independent first-order density directions; redundancy/zero directions are preserved. No McLachlan matrix or solver computed."
+    },
+    "samples": {
+      "cases": 17,
+      "parameter_seed": 2019,
+      "analytic_max_absolute_error": 5.551125833734188e-16,
+      "analytic_absolute_tolerance": 1e-12,
+      "derivative_trace_max_absolute_error": 2.237793284010081e-16,
+      "derivative_hermiticity_max_frobenius_error": 0.0,
+      "physical_identity_absolute_tolerance": 1e-12,
+      "fd_steps": [
+        0.001,
+        0.0001,
+        1e-05,
+        1e-06
+      ],
+      "fd_max_absolute_errors": [
+        6.666665333110444e-07,
+        6.666666663157628e-09,
+        6.666689422730978e-11,
+        1.4742695952918439e-10
+      ],
+      "fd_absolute_tolerances": [
+        2e-06,
+        2e-08,
+        2e-09,
+        2e-09
+      ],
+      "fd_max_defined_relative_errors": [
+        6.66666695214446e-07,
+        6.6676705250378735e-09,
+        7.707631040561822e-11,
+        2.142167737604122e-10
+      ],
+      "fd_relative_tolerances": [
+        5e-06,
+        5e-08,
+        5e-08,
+        5e-08
+      ],
+      "relative_definition": "Frobenius error / analytic derivative Frobenius norm; undefined when norm<=1e-12",
+      "undefined_relative_directions": 12,
+      "relative_norm_threshold": 1e-12,
+      "dtype": "complex128",
+      "shape_per_case": [
+        6,
+        4,
+        4
+      ]
+    },
+    "jvp_and_jit": {
+      "cases": 3,
+      "direction": [
+        0.2652629989889564,
+        -0.4728601286324874,
+        0.19606395577444602,
+        0.4267274331561472,
+        -0.3344620422034667,
+        0.6112582150615082
+      ],
+      "jvp_max_absolute_error": 2.220446049250313e-16,
+      "jit_max_absolute_error": 0.0,
+      "absolute_tolerance": 1e-12,
+      "devices": [
+        "TFRT_CPU_0"
+      ]
+    }
+  },
+  "artifacts": {
+    "samples": {
+      "path": "results/derivatives_20261014_154702_356659/derivative_samples.npz",
+      "sha256": "75b2f27d01d059d1699b9cd4a9d735b7dfa32b0d594316c942d7222bbb10757e",
+      "shapes": {
+        "theta": [
+          17,
+          6
+        ],
+        "rho": [
+          17,
+          4,
+          4
+        ],
+        "D_ad": [
+          17,
+          6,
+          4,
+          4
+        ],
+        "D_dense": [
+          17,
+          6,
+          4,
+          4
+        ],
+        "fd_steps": [
+          4
+        ],
+        "fd_max_absolute_errors": [
+          17,
+          4,
+          6
+        ],
+        "fd_relative_errors": [
+          17,
+          4,
+          6
+        ],
+        "fd_relative_defined": [
+          17,
+          6
+        ]
+      },
+      "dtypes": {
+        "theta": "float64",
+        "rho": "complex128",
+        "D_ad": "complex128",
+        "D_dense": "complex128",
+        "fd_steps": "float64",
+        "fd_max_absolute_errors": "float64",
+        "fd_relative_errors": "float64",
+        "fd_relative_defined": "bool"
+      },
+      "undefined_relative_errors": "Use fd_relative_defined mask; stored zeros are placeholders for undefined relative errors"
+    }
+  }
+}
