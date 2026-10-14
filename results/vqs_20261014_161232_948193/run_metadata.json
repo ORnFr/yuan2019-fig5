@@ -1,0 +1,894 @@
+{
+  "status": "Phase 5 verified baseline completed; Figure 5 comparison deferred to Phase 6",
+  "timestamp": "2026-10-14T16:12:32.977998+08:00",
+  "command": "\"$FIG5_ROOT/.venv/bin/python\" \"$FIG5_ROOT/scripts/run_vqs.py\"",
+  "paper": {
+    "title": "Theory of variational quantum simulation",
+    "year": 2019,
+    "journal_url": "https://quantum-journal.org/papers/q-2019-10-07-191/",
+    "local_pdf_sha256": "e142a56c57c822a45fb22aea7e7b9a47f694a9c37842796a040c9f8d4c2053b7",
+    "pages": {
+      "equations_28_29": 11,
+      "figure4_equation62": 20,
+      "figure5": 21
+    },
+    "version": "Local 41-page journal-formatted PDF; accepted footer 2019-09-07"
+  },
+  "model": {
+    "H": "X tensor I + I tensor X + 0.25 Z tensor Z",
+    "collapse": [
+      "|0><1| tensor I",
+      "I tensor |0><1|"
+    ],
+    "gamma": [
+      1,
+      1
+    ],
+    "initial_state": "|00><00|",
+    "observable": "Z tensor I"
+  },
+  "units": "hbar=1; dimensionless time in field coefficient=1; real angles in radians",
+  "basis": {
+    "wires": [
+      "a0",
+      "a1",
+      "s0",
+      "s1"
+    ],
+    "system": [
+      "00",
+      "01",
+      "10",
+      "11"
+    ]
+  },
+  "precision": "CPU, JAX float64/complex128, NumPy float64 SVD",
+  "equations": "M_ij=Re Tr(D_i^dagger D_j), V_i=Re Tr(D_i^dagger L(rho(theta)))",
+  "svd": {
+    "cutoff": "6 * eps(float64) * s_max",
+    "multiplier": 1,
+    "retained": "s > cutoff",
+    "method": "truncated minimum-norm least squares",
+    "full_condition": "Infinity when numerical rank<6; NPZ infinity is intentional",
+    "retained_condition": "s_max / smallest retained singular value"
+  },
+  "integrator": {
+    "method": "Forward Euler on parameters",
+    "dt": 0.01,
+    "stop": 10.0,
+    "points": 1001,
+    "initial_theta": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "first_step_special_handling": false
+  },
+  "project_choices": "Euler and SVD cutoff are project choices, not asserted paper implementation details",
+  "postprocessing": "No normalization, symmetrization, clipping, Tikhonov or initial perturbation",
+  "exact_data_read": false,
+  "randomness": "Seed 2019 for fixed validation parameters only; deterministic evolution",
+  "python": "3.12.14",
+  "machine": "arm64",
+  "packages": {
+    "Pygments": "2.21.0",
+    "contourpy": "1.3.3",
+    "cycler": "0.12.1",
+    "fonttools": "4.66.1",
+    "graphviz": "0.21",
+    "h5py": "3.16.0",
+    "iniconfig": "2.3.1",
+    "jax": "0.4.38",
+    "jaxlib": "0.4.38",
+    "kiwisolver": "1.5.1",
+    "matplotlib": "3.11.2",
+    "ml_dtypes": "0.5.4",
+    "networkx": "3.7",
+    "numpy": "1.26.4",
+    "opt_einsum": "3.4.0",
+    "packaging": "26.3",
+    "pillow": "12.3.0",
+    "pip": "25.0.1",
+    "pluggy": "1.6.0",
+    "pyparsing": "3.3.3",
+    "pytest": "9.1.1",
+    "python-dateutil": "2.9.0.post0",
+    "qutip": "5.2.3",
+    "scipy": "1.15.3",
+    "six": "1.17.0",
+    "tensorcircuit": "0.12.0",
+    "tensornetwork-ng": "0.5.1"
+  },
+  "requirements_sha256": "0f0941c316e58d2cb648f4fe0a5939dfaf08bc6dbc5c472b1b71e7492d1047d0",
+  "source_sha256": {
+    "scripts/run_vqs.py": "a4c537294387391faca998be53db09d7932f85cbdd0f87b73b00ac2198956323",
+    "src/yuan2019_fig5/runtime.py": "d7b4053ffced1216562982c1bc3f4c567eeef340b8fc53de3b5a470d0bd0cb13",
+    "src/yuan2019_fig5/model.py": "edddbb1754ea507c38cdaf575f2e9147b3ef304b0a14b0b4a126effc3a9cab9c",
+    "src/yuan2019_fig5/ansatz.py": "cd1afcdb023de6ac8105f8f6e1e3ad445059becc6880e6d9c8a7ac707d1533c5",
+    "src/yuan2019_fig5/ansatz_validation.py": "7c516ea4770502a25acf0ee8a9a1f2df12f2f6b9976b3f3dd86807f23c9f877d",
+    "src/yuan2019_fig5/derivatives.py": "8d882b1e2129a95541144cd72b8a4307d7768908d11421ad86a9a8916196a561",
+    "src/yuan2019_fig5/derivatives_validation.py": "5ef8aeb0b2e112033a7a6b6f3a91ef6c3c8644ed23562b14d950548bb37cb11e",
+    "src/yuan2019_fig5/mclachlan.py": "553a9680e767ccdb77c5aa2349d8a907345e3bbe69fe428969fc1d49d17edf84",
+    "src/yuan2019_fig5/mclachlan_validation.py": "13813d9701622c0bbb9e4bb5a2d253d9d5fbb1cc9c44e42a6960efabbe46a791",
+    "src/yuan2019_fig5/vqs.py": "44223f6f7d4bcd4f34cf5762b9fad15997c50b5fda3df6b329abe5b8716dfc59",
+    "tests/test_mclachlan_vqs.py": "313e613d78e738f6a978af5e7045589a62f14e2d9a18718b443a5eb39bc7c2a8"
+  },
+  "code_parent_commit": "cd327b6f7421b0e1ff186cab26300a29ff4d931c",
+  "checks": {
+    "equations": {
+      "cases": 17,
+      "seed": 2019,
+      "dense_max_absolute_errors": {
+        "rho": 2.2247786310271853e-16,
+        "D": 5.551125833734188e-16,
+        "Lrho": 6.6618558309836e-16,
+        "M": 1.4432899320127035e-15,
+        "V": 1.5543122344752192e-15
+      },
+      "jit_max_absolute_error": 0.0,
+      "absolute_tolerance": 1e-12,
+      "density_lstsq_velocity_max_absolute_error": 1.2243361879882286e-10,
+      "velocity_absolute_tolerance": 1e-09
+    },
+    "initial_point": {
+      "M": [
+        [
+          0.49999999999999956,
+          0.0,
+          0.0,
+          0.9999999999999991,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.49999999999999956,
+          0.0,
+          0.0,
+          0.9999999999999991,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.9999999999999991,
+          0.0,
+          0.0,
+          1.9999999999999982,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.9999999999999991,
+          0.0,
+          0.0,
+          1.9999999999999982,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "V": [
+        0.9999999999999991,
+        0.9999999999999991,
+        0.0,
+        1.9999999999999982,
+        1.9999999999999982,
+        0.0
+      ],
+      "theta_dot": [
+        0.3999999999999999,
+        0.3999999999999999,
+        0.0,
+        0.7999999999999997,
+        0.7999999999999997,
+        0.0
+      ],
+      "singular_values": [
+        2.499999999999998,
+        2.499999999999998,
+        1.168224239806663e-16,
+        1.168224239806663e-16,
+        0.0,
+        0.0
+      ],
+      "rank": 2,
+      "cutoff": 3.3306690738754665e-15,
+      "full_condition": "infinity (rank deficient)",
+      "retained_condition": 1.0,
+      "linear_residual": 8.95090418262362e-16,
+      "tangent_residual": 6.661338147750939e-16,
+      "absolute_tolerance": 1e-12
+    },
+    "short_evolution": {
+      "baseline": {
+        "points": 21,
+        "trace_max_absolute_error": 7.771561172376096e-16,
+        "hermiticity_max_frobenius_error": 0.0,
+        "minimum_density_eigenvalue": 0.0,
+        "density_validity_tolerance": 1e-10,
+        "dense_reconstruction_max_absolute_error": 3.3309188161273433e-16,
+        "alignment_absolute_tolerance": 1e-12,
+        "rank_counts": {
+          "2": 1,
+          "6": 20
+        },
+        "linear_residual_max": 3.213286690977601e-15,
+        "tangent_residual_max": 1.7774171639629582e-05,
+        "retained_condition_max": 317348286.0639054,
+        "parameter_step_norm_max": 0.03148835017123821,
+        "final_z0": 0.9282173143630134
+      },
+      "threshold_sensitivity": [
+        {
+          "cutoff_multiplier": 10.0,
+          "z0_max_difference": 0.0,
+          "rho_max_difference": 0.0,
+          "theta_max_difference": 0.0,
+          "rank_changes": 0
+        },
+        {
+          "cutoff_multiplier": 100.0,
+          "z0_max_difference": 0.0,
+          "rho_max_difference": 0.0,
+          "theta_max_difference": 0.0,
+          "rank_changes": 0
+        }
+      ],
+      "short_step_diagnostics": [
+        {
+          "dt": 0.005,
+          "z0_max_difference_from_baseline": 0.00016190608964672393,
+          "z0_max_difference_from_previous_dt": 0.00016190608964672393
+        },
+        {
+          "dt": 0.0025,
+          "z0_max_difference_from_baseline": 0.00024555930176628493,
+          "z0_max_difference_from_previous_dt": 8.3653212119561e-05
+        }
+      ],
+      "stop": 0.2,
+      "cutoff_sensitivity_rho_tolerance": 1e-10,
+      "limitation": "Short-time diagnostics do not establish full-time convergence or the Figure 5 error target."
+    },
+    "full_baseline": {
+      "points": 1001,
+      "trace_max_absolute_error": 1.1102230246251565e-15,
+      "hermiticity_max_frobenius_error": 0.0,
+      "minimum_density_eigenvalue": 0.0,
+      "density_validity_tolerance": 1e-10,
+      "dense_reconstruction_max_absolute_error": 1.942897769061306e-16,
+      "alignment_absolute_tolerance": 1e-12,
+      "rank_counts": {
+        "2": 1,
+        "6": 1000
+      },
+      "linear_residual_max": 5.758638175551862e-15,
+      "tangent_residual_max": 0.03150281870651847,
+      "retained_condition_max": 317348286.0639054,
+      "parameter_step_norm_max": 0.03148835017123821,
+      "final_z0": 0.121878466279632
+    }
+  },
+  "artifacts": {
+    "vqs.npz": {
+      "path": "results/vqs_20261014_161232_948193/vqs.npz",
+      "sha256": "9e14bc5ce7355ab67c9aeba277a41ebd6905c7c01435e518dcbfdb27707dc1c3",
+      "shapes": {
+        "t": [
+          1001
+        ],
+        "theta": [
+          1001,
+          6
+        ],
+        "rho": [
+          1001,
+          4,
+          4
+        ],
+        "z0": [
+          1001
+        ],
+        "theta_dot": [
+          1001,
+          6
+        ],
+        "M": [
+          1001,
+          6,
+          6
+        ],
+        "V": [
+          1001,
+          6
+        ],
+        "singular_values": [
+          1001,
+          6
+        ],
+        "rank": [
+          1001
+        ],
+        "parameter_step": [
+          1000,
+          6
+        ],
+        "cutoff": [
+          1001
+        ],
+        "full_condition": [
+          1001
+        ],
+        "retained_condition": [
+          1001
+        ],
+        "linear_residual": [
+          1001
+        ],
+        "tangent_residual": [
+          1001
+        ],
+        "trace_error": [
+          1001
+        ],
+        "hermiticity_error": [
+          1001
+        ],
+        "minimum_eigenvalue": [
+          1001
+        ],
+        "m_imaginary": [
+          1001
+        ],
+        "v_imaginary": [
+          1001
+        ],
+        "m_symmetry": [
+          1001
+        ],
+        "m_minimum_eigenvalue": [
+          1001
+        ]
+      },
+      "dtypes": {
+        "t": "float64",
+        "theta": "float64",
+        "rho": "complex128",
+        "z0": "float64",
+        "theta_dot": "float64",
+        "M": "float64",
+        "V": "float64",
+        "singular_values": "float64",
+        "rank": "int64",
+        "parameter_step": "float64",
+        "cutoff": "float64",
+        "full_condition": "float64",
+        "retained_condition": "float64",
+        "linear_residual": "float64",
+        "tangent_residual": "float64",
+        "trace_error": "float64",
+        "hermiticity_error": "float64",
+        "minimum_eigenvalue": "float64",
+        "m_imaginary": "float64",
+        "v_imaginary": "float64",
+        "m_symmetry": "float64",
+        "m_minimum_eigenvalue": "float64"
+      }
+    },
+    "short_diagnostics.npz": {
+      "path": "results/vqs_20261014_161232_948193/short_diagnostics.npz",
+      "sha256": "178f9d3bb2c424b95c08178ff4b682380636c3f0dc0bd76ba2134d19573f8c8a",
+      "shapes": {
+        "baseline_t": [
+          21
+        ],
+        "baseline_theta": [
+          21,
+          6
+        ],
+        "baseline_rho": [
+          21,
+          4,
+          4
+        ],
+        "baseline_z0": [
+          21
+        ],
+        "baseline_theta_dot": [
+          21,
+          6
+        ],
+        "baseline_M": [
+          21,
+          6,
+          6
+        ],
+        "baseline_V": [
+          21,
+          6
+        ],
+        "baseline_singular_values": [
+          21,
+          6
+        ],
+        "baseline_rank": [
+          21
+        ],
+        "baseline_parameter_step": [
+          20,
+          6
+        ],
+        "baseline_cutoff": [
+          21
+        ],
+        "baseline_full_condition": [
+          21
+        ],
+        "baseline_retained_condition": [
+          21
+        ],
+        "baseline_linear_residual": [
+          21
+        ],
+        "baseline_tangent_residual": [
+          21
+        ],
+        "baseline_trace_error": [
+          21
+        ],
+        "baseline_hermiticity_error": [
+          21
+        ],
+        "baseline_minimum_eigenvalue": [
+          21
+        ],
+        "baseline_m_imaginary": [
+          21
+        ],
+        "baseline_v_imaginary": [
+          21
+        ],
+        "baseline_m_symmetry": [
+          21
+        ],
+        "baseline_m_minimum_eigenvalue": [
+          21
+        ],
+        "cutoff10_t": [
+          21
+        ],
+        "cutoff10_theta": [
+          21,
+          6
+        ],
+        "cutoff10_rho": [
+          21,
+          4,
+          4
+        ],
+        "cutoff10_z0": [
+          21
+        ],
+        "cutoff10_theta_dot": [
+          21,
+          6
+        ],
+        "cutoff10_M": [
+          21,
+          6,
+          6
+        ],
+        "cutoff10_V": [
+          21,
+          6
+        ],
+        "cutoff10_singular_values": [
+          21,
+          6
+        ],
+        "cutoff10_rank": [
+          21
+        ],
+        "cutoff10_parameter_step": [
+          20,
+          6
+        ],
+        "cutoff10_cutoff": [
+          21
+        ],
+        "cutoff10_full_condition": [
+          21
+        ],
+        "cutoff10_retained_condition": [
+          21
+        ],
+        "cutoff10_linear_residual": [
+          21
+        ],
+        "cutoff10_tangent_residual": [
+          21
+        ],
+        "cutoff10_trace_error": [
+          21
+        ],
+        "cutoff10_hermiticity_error": [
+          21
+        ],
+        "cutoff10_minimum_eigenvalue": [
+          21
+        ],
+        "cutoff10_m_imaginary": [
+          21
+        ],
+        "cutoff10_v_imaginary": [
+          21
+        ],
+        "cutoff10_m_symmetry": [
+          21
+        ],
+        "cutoff10_m_minimum_eigenvalue": [
+          21
+        ],
+        "cutoff100_t": [
+          21
+        ],
+        "cutoff100_theta": [
+          21,
+          6
+        ],
+        "cutoff100_rho": [
+          21,
+          4,
+          4
+        ],
+        "cutoff100_z0": [
+          21
+        ],
+        "cutoff100_theta_dot": [
+          21,
+          6
+        ],
+        "cutoff100_M": [
+          21,
+          6,
+          6
+        ],
+        "cutoff100_V": [
+          21,
+          6
+        ],
+        "cutoff100_singular_values": [
+          21,
+          6
+        ],
+        "cutoff100_rank": [
+          21
+        ],
+        "cutoff100_parameter_step": [
+          20,
+          6
+        ],
+        "cutoff100_cutoff": [
+          21
+        ],
+        "cutoff100_full_condition": [
+          21
+        ],
+        "cutoff100_retained_condition": [
+          21
+        ],
+        "cutoff100_linear_residual": [
+          21
+        ],
+        "cutoff100_tangent_residual": [
+          21
+        ],
+        "cutoff100_trace_error": [
+          21
+        ],
+        "cutoff100_hermiticity_error": [
+          21
+        ],
+        "cutoff100_minimum_eigenvalue": [
+          21
+        ],
+        "cutoff100_m_imaginary": [
+          21
+        ],
+        "cutoff100_v_imaginary": [
+          21
+        ],
+        "cutoff100_m_symmetry": [
+          21
+        ],
+        "cutoff100_m_minimum_eigenvalue": [
+          21
+        ],
+        "dt0_005_t": [
+          41
+        ],
+        "dt0_005_theta": [
+          41,
+          6
+        ],
+        "dt0_005_rho": [
+          41,
+          4,
+          4
+        ],
+        "dt0_005_z0": [
+          41
+        ],
+        "dt0_005_theta_dot": [
+          41,
+          6
+        ],
+        "dt0_005_M": [
+          41,
+          6,
+          6
+        ],
+        "dt0_005_V": [
+          41,
+          6
+        ],
+        "dt0_005_singular_values": [
+          41,
+          6
+        ],
+        "dt0_005_rank": [
+          41
+        ],
+        "dt0_005_parameter_step": [
+          40,
+          6
+        ],
+        "dt0_005_cutoff": [
+          41
+        ],
+        "dt0_005_full_condition": [
+          41
+        ],
+        "dt0_005_retained_condition": [
+          41
+        ],
+        "dt0_005_linear_residual": [
+          41
+        ],
+        "dt0_005_tangent_residual": [
+          41
+        ],
+        "dt0_005_trace_error": [
+          41
+        ],
+        "dt0_005_hermiticity_error": [
+          41
+        ],
+        "dt0_005_minimum_eigenvalue": [
+          41
+        ],
+        "dt0_005_m_imaginary": [
+          41
+        ],
+        "dt0_005_v_imaginary": [
+          41
+        ],
+        "dt0_005_m_symmetry": [
+          41
+        ],
+        "dt0_005_m_minimum_eigenvalue": [
+          41
+        ],
+        "dt0_0025_t": [
+          81
+        ],
+        "dt0_0025_theta": [
+          81,
+          6
+        ],
+        "dt0_0025_rho": [
+          81,
+          4,
+          4
+        ],
+        "dt0_0025_z0": [
+          81
+        ],
+        "dt0_0025_theta_dot": [
+          81,
+          6
+        ],
+        "dt0_0025_M": [
+          81,
+          6,
+          6
+        ],
+        "dt0_0025_V": [
+          81,
+          6
+        ],
+        "dt0_0025_singular_values": [
+          81,
+          6
+        ],
+        "dt0_0025_rank": [
+          81
+        ],
+        "dt0_0025_parameter_step": [
+          80,
+          6
+        ],
+        "dt0_0025_cutoff": [
+          81
+        ],
+        "dt0_0025_full_condition": [
+          81
+        ],
+        "dt0_0025_retained_condition": [
+          81
+        ],
+        "dt0_0025_linear_residual": [
+          81
+        ],
+        "dt0_0025_tangent_residual": [
+          81
+        ],
+        "dt0_0025_trace_error": [
+          81
+        ],
+        "dt0_0025_hermiticity_error": [
+          81
+        ],
+        "dt0_0025_minimum_eigenvalue": [
+          81
+        ],
+        "dt0_0025_m_imaginary": [
+          81
+        ],
+        "dt0_0025_v_imaginary": [
+          81
+        ],
+        "dt0_0025_m_symmetry": [
+          81
+        ],
+        "dt0_0025_m_minimum_eigenvalue": [
+          81
+        ]
+      },
+      "dtypes": {
+        "baseline_t": "float64",
+        "baseline_theta": "float64",
+        "baseline_rho": "complex128",
+        "baseline_z0": "float64",
+        "baseline_theta_dot": "float64",
+        "baseline_M": "float64",
+        "baseline_V": "float64",
+        "baseline_singular_values": "float64",
+        "baseline_rank": "int64",
+        "baseline_parameter_step": "float64",
+        "baseline_cutoff": "float64",
+        "baseline_full_condition": "float64",
+        "baseline_retained_condition": "float64",
+        "baseline_linear_residual": "float64",
+        "baseline_tangent_residual": "float64",
+        "baseline_trace_error": "float64",
+        "baseline_hermiticity_error": "float64",
+        "baseline_minimum_eigenvalue": "float64",
+        "baseline_m_imaginary": "float64",
+        "baseline_v_imaginary": "float64",
+        "baseline_m_symmetry": "float64",
+        "baseline_m_minimum_eigenvalue": "float64",
+        "cutoff10_t": "float64",
+        "cutoff10_theta": "float64",
+        "cutoff10_rho": "complex128",
+        "cutoff10_z0": "float64",
+        "cutoff10_theta_dot": "float64",
+        "cutoff10_M": "float64",
+        "cutoff10_V": "float64",
+        "cutoff10_singular_values": "float64",
+        "cutoff10_rank": "int64",
+        "cutoff10_parameter_step": "float64",
+        "cutoff10_cutoff": "float64",
+        "cutoff10_full_condition": "float64",
+        "cutoff10_retained_condition": "float64",
+        "cutoff10_linear_residual": "float64",
+        "cutoff10_tangent_residual": "float64",
+        "cutoff10_trace_error": "float64",
+        "cutoff10_hermiticity_error": "float64",
+        "cutoff10_minimum_eigenvalue": "float64",
+        "cutoff10_m_imaginary": "float64",
+        "cutoff10_v_imaginary": "float64",
+        "cutoff10_m_symmetry": "float64",
+        "cutoff10_m_minimum_eigenvalue": "float64",
+        "cutoff100_t": "float64",
+        "cutoff100_theta": "float64",
+        "cutoff100_rho": "complex128",
+        "cutoff100_z0": "float64",
+        "cutoff100_theta_dot": "float64",
+        "cutoff100_M": "float64",
+        "cutoff100_V": "float64",
+        "cutoff100_singular_values": "float64",
+        "cutoff100_rank": "int64",
+        "cutoff100_parameter_step": "float64",
+        "cutoff100_cutoff": "float64",
+        "cutoff100_full_condition": "float64",
+        "cutoff100_retained_condition": "float64",
+        "cutoff100_linear_residual": "float64",
+        "cutoff100_tangent_residual": "float64",
+        "cutoff100_trace_error": "float64",
+        "cutoff100_hermiticity_error": "float64",
+        "cutoff100_minimum_eigenvalue": "float64",
+        "cutoff100_m_imaginary": "float64",
+        "cutoff100_v_imaginary": "float64",
+        "cutoff100_m_symmetry": "float64",
+        "cutoff100_m_minimum_eigenvalue": "float64",
+        "dt0_005_t": "float64",
+        "dt0_005_theta": "float64",
+        "dt0_005_rho": "complex128",
+        "dt0_005_z0": "float64",
+        "dt0_005_theta_dot": "float64",
+        "dt0_005_M": "float64",
+        "dt0_005_V": "float64",
+        "dt0_005_singular_values": "float64",
+        "dt0_005_rank": "int64",
+        "dt0_005_parameter_step": "float64",
+        "dt0_005_cutoff": "float64",
+        "dt0_005_full_condition": "float64",
+        "dt0_005_retained_condition": "float64",
+        "dt0_005_linear_residual": "float64",
+        "dt0_005_tangent_residual": "float64",
+        "dt0_005_trace_error": "float64",
+        "dt0_005_hermiticity_error": "float64",
+        "dt0_005_minimum_eigenvalue": "float64",
+        "dt0_005_m_imaginary": "float64",
+        "dt0_005_v_imaginary": "float64",
+        "dt0_005_m_symmetry": "float64",
+        "dt0_005_m_minimum_eigenvalue": "float64",
+        "dt0_0025_t": "float64",
+        "dt0_0025_theta": "float64",
+        "dt0_0025_rho": "complex128",
+        "dt0_0025_z0": "float64",
+        "dt0_0025_theta_dot": "float64",
+        "dt0_0025_M": "float64",
+        "dt0_0025_V": "float64",
+        "dt0_0025_singular_values": "float64",
+        "dt0_0025_rank": "int64",
+        "dt0_0025_parameter_step": "float64",
+        "dt0_0025_cutoff": "float64",
+        "dt0_0025_full_condition": "float64",
+        "dt0_0025_retained_condition": "float64",
+        "dt0_0025_linear_residual": "float64",
+        "dt0_0025_tangent_residual": "float64",
+        "dt0_0025_trace_error": "float64",
+        "dt0_0025_hermiticity_error": "float64",
+        "dt0_0025_minimum_eigenvalue": "float64",
+        "dt0_0025_m_imaginary": "float64",
+        "dt0_0025_v_imaginary": "float64",
+        "dt0_0025_m_symmetry": "float64",
+        "dt0_0025_m_minimum_eigenvalue": "float64"
+      }
+    }
+  },
+  "limitations": [
+    "No full-time step convergence claim",
+    "No full-time cutoff sensitivity claim",
+    "No Exact comparison, error target assessment or Figure 5 plot in Phase 5"
+  ]
+}

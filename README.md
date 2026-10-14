@@ -1,6 +1,6 @@
 # Yuan et al. (2019) Figure 5 reproduction
 
-Phase 4 (reduced-density Jacobian) is complete and awaiting user acceptance. The user authorized Phase 4 after the ansatz delivery. No McLachlan matrix, parameter solve or VQS time evolution has been implemented.
+Phase 5 (McLachlan equations, SVD solve and parameter Forward Euler) is complete and awaiting user acceptance. The fixed baseline has run through t=10. The Figure 5 comparison and plot remain for separately approved Phase 6.
 
 Target: mixed-state variational quantum simulation of the two-qubit Lindblad model in Figure 5 of [Yuan et al. (2019)](https://quantum-journal.org/papers/q-2019-10-07-191/).
 
@@ -13,7 +13,37 @@ See [Master Prompt](docs/Codex_Master_Prompt.md), [Mac/GitHub setup guide](docs/
 
 The Git root is this subproject only. Literature in `/Users/ornfr/Desktop/bookandpaper` remains outside the repository and strictly read-only.
 
-The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 4 uses local branch `phase4/derivatives`, based on ansatz commit `3573a98`; earlier branches are preserved. No push or merge has been performed.
+The private GitHub repository is [ORnFr/yuan2019-fig5](https://github.com/ORnFr/yuan2019-fig5). The existing remote baseline was established during Phase 0. Local `main` tracks `origin/main`. Phase 5 uses local branch `phase5/vqs`, based on derivative commit `cd327b6`; earlier branches are preserved. No push or merge has been performed.
+
+## VQS baseline: run and outputs
+
+`mclachlan.py` evaluates the density-space Eq. (28)/(29): `M_ij=Re Tr(D_i^dagger D_j)` and `V_i=Re Tr(D_i^dagger L(rho(theta)))`. It verifies imaginary parts, symmetry and positive semidefiniteness before taking real parts. The fixed model uses all Hamiltonian and dissipative terms at the current ansatz state. VQS never reads Exact data.
+
+`solve_svd` retains singular values `s > 6*eps(float64)*s_max` and returns the truncated minimum-norm solution. Full condition is infinity when numerical rank is below six; retained condition describes only the retained spectrum. There is no Tikhonov term or initial perturbation. At six-zero initial parameters, M has rank two and ideal singular values `(2.5,2.5,0,0,0,0)`, V is `(1,1,0,2,2,0)` and parameter velocity is `(0.4,0.4,0,0.8,0.8,0)`.
+
+Run from any directory using the existing environment:
+
+```bash
+FIG5_ROOT='/Users/ornfr/Desktop/ai小垃圾/MSVQD/reproductions/yuan2019_fig5'
+PYTHONPYCACHEPREFIX="$FIG5_ROOT/work/cache/pycache" \
+  "$FIG5_ROOT/.venv/bin/python" "$FIG5_ROOT/scripts/run_vqs.py"
+```
+
+The entry point checks independent equations, the analytic initial solve, short-time parameter/time alignment, cutoff sensitivity and smaller-step diagnostics before running the baseline. `vqs.py` updates `theta[n+1]=theta[n]+0.01*theta_dot[n]`, then reconstructs rho from the circuit. It neither performs a density Euler step nor repairs the resulting state. Euler and the SVD threshold are project choices, not asserted details of the paper's implementation.
+
+Every invocation writes a unique `results/vqs_<timestamp>/`. The verified run is [results/vqs_20261014_161232_948193](results/vqs_20261014_161232_948193/):
+
+- `vqs.npz`: t `(1001,)`, theta/velocity `(1001,6)`, rho complex128 `(1001,4,4)`, z0 `(1001,)`, M `(1001,6,6)`, V/singular values `(1001,6)`, rank, cutoff, full/retained condition, linear/tangent residuals and physical identity diagnostics. `parameter_step` is `(1000,6)`, containing only applied updates. Other numeric arrays are float64 except int64 rank. Infinity is allowed only in documented condition diagnostics; all physical quantities and updates are finite.
+- `short_diagnostics.npz`: full diagnostic trajectories to t=.2 for cutoff multipliers 1, 10, 100 and dt=.01, .005, .0025, using separate key prefixes. They do not replace the baseline.
+- `run_metadata.json`: equations, choices, source PDF hash/pages, actual checks, software versions, source/data hashes, shapes and dtypes. Both NPZ files were read back and checked element by element.
+
+Across 17 parameter cases, independent full-gate derivatives, QuTiP Liouvillian and explicit trace products agree with M/V to `1.443e-15` / `1.554e-15` (absolute tolerance `1e-12`). Eager and JIT outputs agree exactly. A direct real density-space least-squares reference, avoiding Gram formation, agrees with the velocity to `1.224e-10` (absolute tolerance `1e-9`). Synthetic inconsistent, zero and full-rank systems also verify cutoff/minimum-norm behavior and honest residuals. The combined suite passed **29 tests in 7.87s**, started outside the project; `pip check` passes with unchanged dependencies.
+
+The full baseline has trace error `1.110e-15`, Hermiticity error zero, minimum density eigenvalue zero (physical tolerance `1e-10`), and correct parameter/time/observable alignment (tolerance `1e-12`). Eleven densities spanning the full interval agree with independent reconstruction to `1.943e-16`. Initial rank is two; the remaining 1000 sampled matrices have numerical rank six. Maximum retained condition is `3.173e8`; maximum parameter-step norm is `0.0314884`. Final `Z0(10)=0.1218784663`.
+
+Maximum linear residual is `5.759e-15`, while maximum density-tangent residual is `0.0315028`: solving the normal equation accurately does not eliminate the ansatz representation error. Over t<=.2, increasing cutoff tenfold/hundredfold changes neither rank nor trajectory. On that short interval, successive dt=.01/.005 and .005/.0025 observable differences are `1.619e-4` and `8.365e-5`. These are short-time observations, not full-time convergence or threshold-insensitivity claims. No Exact/VQS error comparison or Figure 5 plot has been performed in Phase 5.
+
+See [Chinese formulas and code explanation](notes/mclachlan_vqs_zh.md). Stop after Phase 5 for user acceptance; Phase 6 requires the user's next instruction.
 
 ## Reduced-density Jacobian
 
@@ -34,9 +64,9 @@ This writes a unique `results/derivatives_<timestamp>/`. The verified run is [re
 
 All 17 cases were checked against an independent NumPy/SciPy gate-product derivative and full-density partial trace, with maximum absolute error `5.551e-16` (tolerance `1e-12`). Derivative trace error is `2.238e-16`, Hermiticity Frobenius error is zero. Central differences at `h=1e-3,1e-4,1e-5,1e-6` give maximum absolute errors `6.667e-7,6.667e-9,6.667e-11,1.474e-10`, below recorded step-dependent tolerances. Relative Frobenius errors use analytic derivative norms; directions with norms <=1e-12 have undefined relative error and must be interpreted using the saved mask, not as exact zero error. Complex-output JVP and JIT agree within tolerance. The combined suite passed **22 tests**; `pip check` still passes with unchanged dependencies.
 
-At zero parameters, independent commutator formulas confirm `D2=D5=0`, `D3=2*D0`, `D4=2*D1`. There are two independent first-order density directions, not six. No initial perturbation, derivative normalization, symmetrization or trace repair was applied. The McLachlan matrix and its rank/spectrum/solve remain for a separately approved Phase 5. Derivatives are tangent matrices and are not required to be positive density matrices.
+At zero parameters, independent commutator formulas confirm `D2=D5=0`, `D3=2*D0`, `D4=2*D1`. There are two independent first-order density directions, not six. No initial perturbation, derivative normalization, symmetrization or trace repair was applied. Phase 5 preserves those derivatives and records the resulting McLachlan rank/spectrum/solve above. Derivatives are tangent matrices and are not required to be positive density matrices.
 
-See [Chinese derivation and code notes](notes/density_derivatives_zh.md) and [source/method review](papers/phase4_derivatives_source_zh.md). Earlier Exact/ansatz code and accepted results are unchanged. Stop after Phase 4 for user acceptance.
+See [Chinese derivation and code notes](notes/density_derivatives_zh.md) and [source/method review](papers/phase4_derivatives_source_zh.md). Earlier Exact/ansatz/derivative code and accepted results are unchanged.
 
 ## Figure 4 ansatz and partial trace
 
@@ -147,10 +177,12 @@ Set the local cache variables above before installation. `/etc/ssl/cert.pem` is 
 ## Files and scope
 
 - `scripts/check_environment.py`: standalone environment verification, not research evolution code.
-- `tests/test_environment.py`: four smoke checks using independent analytic/matrix references.
+- `tests/`: independent environment, Exact, ansatz, derivative and McLachlan/Euler numerical checks.
+- `src/yuan2019_fig5/`: separate Exact, circuit, derivative and VQS modules with validation references.
+- `scripts/run_vqs.py`: independently validated Phase 5 baseline entry point.
 - `requirements.txt`: the single pinned installation specification.
 - `docs/`: approved master plan, setup guide, environment rationale and Chinese learning notes.
-- `results/`: small tracked Phase 1 verification and dependency records.
+- `results/`: tracked verification records and small Exact/VQS data; existing results are preserved.
 - `.venv/` and `work/`: ignored environment, caches and temporary logs; no literature.
 
-TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the environment/ansatz/derivative checks. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution, McLachlan equations and VQS evolution remain outside the completed work. Stop after Phase 4 and wait for the user's next instruction.
+TensorCircuit may print notices about absent Qiskit, Cirq, Tencent cloud support and Optax during the JAX checks and VQS run. Those optional features are outside the selected JAX path and were not installed. The Exact entry point does not import these frameworks. Full upstream suites, GPU execution, full-time convergence studies and the Figure 5 comparison/plot remain outside the completed work. Stop after Phase 5 and wait for the user's next instruction.

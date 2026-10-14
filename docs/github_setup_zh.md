@@ -1,6 +1,6 @@
 # GitHub 仓库与 Mac 本地关联指南
 
-更新日期：2026-10-13。
+更新日期：2026-10-14。
 
 ## 已完成的关联
 
@@ -23,7 +23,7 @@ git log --oneline --decorate -3
 git remote -v
 ```
 
-Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`。用户随后批准Phase 4，当前分支为 `phase4/derivatives`，从ansatz提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。
+Phase 1环境提交为 `d9d208d`，Phase 2 Exact提交为 `41654c3`且已获用户验收，Phase 3 ansatz提交为 `3573a98`，Phase 4 Jacobian提交为 `cd327b6`。用户随后批准Phase 5，当前分支为 `phase5/vqs`，从Jacobian提交继续开发。阶段提交后工作区应无待提交改动。main仍跟踪origin/main；各阶段分支均只保存在本地，这是未push的正常状态。当前阶段哈希用 `git log -1 --oneline phase5/vqs` 查询。
 
 如需检查仓库范围：
 
@@ -53,4 +53,4 @@ git commit -m '<描述本阶段成果的提交说明>'
 
 ## 下一步
 
-审阅项目PROGRESS.md、README和Phase 4密度矩阵Jacobian验证。当前停下等待用户验收和下一步选择。未实现McLachlan或VQS，不自动进入后续阶段。未经单独批准不push或merge。
+审阅项目PROGRESS.md、README和Phase 5的McLachlan/SVD及VQS基线验证。当前停下等待用户验收和下一步选择。未开始Phase 6比较/绘图，不自动进入后续阶段。未经单独批准不push或merge。
